@@ -1,30 +1,20 @@
-package com.example.demo.servlet;
+package com.example.demo.util;
 
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.IOException;
+public class DateRangeUtil {
 
-public class SimpleHelloServlet extends HttpServlet {
+    public static List<LocalDate> daysBetween(LocalDate start, LocalDate end) {
 
-    private String message = "Hello from servlet";
+        List<LocalDate> dates = new ArrayList<>();
 
-    @Override
-    public void init(ServletConfig config) {
-        try {
-            if (config != null) {
-                super.init(config);
-            }
-        } catch (Exception ignored) {}
-    }
+        while (!start.isAfter(end)) {
+            dates.add(start);
+            start = start.plusDays(1);
+        }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        resp.setContentType("text/plain");
-        resp.getWriter().write(message);
+        return dates;
     }
 }
