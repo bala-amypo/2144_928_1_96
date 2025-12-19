@@ -14,8 +14,12 @@ public class SimpleHelloServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) {
         try {
-            super.init(config);
-        } catch (Exception ignored) {}
+            if (config != null) {
+                super.init(config);
+            }
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
     @Override

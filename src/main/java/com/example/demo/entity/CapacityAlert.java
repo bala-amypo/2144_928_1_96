@@ -15,7 +15,8 @@ public class CapacityAlert {
     private String severity;
     private String message;
 
-    public CapacityAlert() {}
+    public CapacityAlert() {
+    }
 
     public CapacityAlert(String teamName, LocalDate date, String severity, String message) {
         this.teamName = teamName;
@@ -24,5 +25,23 @@ public class CapacityAlert {
         this.message = message;
     }
 
-    // getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
