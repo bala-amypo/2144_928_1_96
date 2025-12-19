@@ -1,39 +1,28 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "user_accounts")
-public class UserAccount {
+public class CapacityAlert {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String email;
+    private String teamName;
+    private LocalDate date;
+    private String severity;
+    private String message;
 
-    private String password;
-    private String role;
+    public CapacityAlert() {}
 
-    @OneToOne
-    private EmployeeProfile employeeProfile;
-
-    public UserAccount() {}
-
-    public Long getId() { return id; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
-
-    public EmployeeProfile getEmployeeProfile() { return employeeProfile; }
-    public void setEmployeeProfile(EmployeeProfile employeeProfile) {
-        this.employeeProfile = employeeProfile;
+    public CapacityAlert(String teamName, LocalDate date, String severity, String message) {
+        this.teamName = teamName;
+        this.date = date;
+        this.severity = severity;
+        this.message = message;
     }
+
+    // getters and setters
 }
