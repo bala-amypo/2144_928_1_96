@@ -30,6 +30,13 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+	<!-- MySQL JDBC driver -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+
 	<!-- Spring Security -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
