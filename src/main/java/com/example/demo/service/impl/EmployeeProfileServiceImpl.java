@@ -22,7 +22,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
     @Override
     public EmployeeProfileDto create(EmployeeProfileDto dto) {
         EmployeeProfile e = new EmployeeProfile();
-        e.setEmployeeId(dto.getEmployeeId());
+        e.setEmployeeId(dto.getEmployeeId()); // ✅ int → int
         e.setFullName(dto.getFullName());
         e.setEmail(dto.getEmail());
         e.setTeamName(dto.getTeamName());
@@ -78,7 +78,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
     private EmployeeProfileDto map(EmployeeProfile e) {
         EmployeeProfileDto dto = new EmployeeProfileDto();
         dto.setId(e.getId());
-        dto.setEmployeeId(e.getEmployeeId());
+        dto.setEmployeeId(e.getEmployeeId()); // ✅ int → int
         dto.setFullName(e.getFullName());
         dto.setEmail(e.getEmail());
         dto.setTeamName(e.getTeamName());

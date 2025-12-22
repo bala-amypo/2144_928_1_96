@@ -3,59 +3,27 @@ package com.example.demo.dto;
 public class EmployeeProfileDto {
 
     private Long id;
-    private String employeeId;
+    private int employeeId;   // ✅ MUST be int
     private String fullName;
     private String email;
     private String teamName;
     private String role;
 
-    public EmployeeProfileDto() {}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public int getEmployeeId() { return employeeId; }
+    public void setEmployeeId(int employeeId) { this.employeeId = employeeId; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-    public String getEmployeeId() {
-        return employeeId;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
-    }
+    public String getTeamName() { return teamName; }
+    public void setTeamName(String teamName) { this.teamName = teamName; }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTeamName() {
-        return teamName;
-    }
-
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }
