@@ -19,8 +19,9 @@ public class EmployeeProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 🔹 CHANGED: String → int
     @Column(nullable = false)
-    private String employeeId;
+    private int employeeId;
 
     private String fullName;
 
@@ -45,30 +46,71 @@ public class EmployeeProfile {
     public EmployeeProfile() {}
 
     // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getEmployeeId() { return employeeId; }
-    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    // 🔹 UPDATED getter & setter
+    public int getEmployeeId() {
+        return employeeId;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
 
-    public String getTeamName() { return teamName; }
-    public void setTeamName(String teamName) { this.teamName = teamName; }
+    public String getFullName() {
+        return fullName;
+    }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public String getEmail() {
+        return email;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public Set<EmployeeProfile> getColleagues() { return colleagues; }
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public Set<EmployeeProfile> getColleagues() {
+        return colleagues;
+    }
+
     public void setColleagues(Set<EmployeeProfile> colleagues) {
         this.colleagues = colleagues;
     }
