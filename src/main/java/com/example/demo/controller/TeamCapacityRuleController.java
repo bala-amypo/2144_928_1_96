@@ -15,24 +15,19 @@ public class TeamCapacityRuleController {
     }
 
     @PostMapping
-    public TeamCapacityConfig create(
-            @RequestBody TeamCapacityConfig config
-    ) {
-        return service.createRule(config);
+    public TeamCapacityRule create(@RequestBody TeamCapacityRule rule) {
+        return service.create(rule);
     }
 
     @PutMapping("/{id}")
-    public TeamCapacityConfig update(
-            @PathVariable Long id,
-            @RequestBody TeamCapacityConfig config
-    ) {
-        return service.updateRule(id, config);
+    public TeamCapacityRule update(@PathVariable Long id,
+                                   @RequestBody TeamCapacityRule rule) {
+        return service.update(id, rule);
     }
 
     @GetMapping("/team/{teamName}")
-    public TeamCapacityConfig getByTeam(
-            @PathVariable String teamName
-    ) {
-        return service.getRuleByTeam(teamName);
+    public TeamCapacityRule getByTeam(@PathVariable String teamName) {
+        return service.getByTeam(teamName);
     }
 }
+

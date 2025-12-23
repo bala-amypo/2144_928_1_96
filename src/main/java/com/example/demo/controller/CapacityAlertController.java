@@ -13,33 +13,20 @@ import java.util.List;
 @RequestMapping("/api/capacity-alerts")
 public class CapacityAlertController {
 
-    private final CapacityAnalysisService analysisService;
-    private final CapacityAlertRepository alertRepository;
+    private final CapacityAnalysisService service;
 
-    public CapacityAlertController(
-            CapacityAnalysisService analysisService,
-            CapacityAlertRepository alertRepository
-    ) {
-        this.analysisService = analysisService;
-        this.alertRepository = alertRepository;
+    public CapacityAlertController(CapacityAnalysisService service) {
+        this.service = service;
     }
 
     @PostMapping("/analyze")
-    public CapacityAnalysisResultDto analyze(
-            @RequestParam String teamName,
-            @RequestParam LocalDate start,
-            @RequestParam LocalDate end
-    ) {
-        return analysisService.analyzeTeamCapacity(teamName, start, end);
+    public void analyze() {
+        service.analyze();
     }
 
     @GetMapping("/team/{teamName}")
-    public List<CapacityAlert> getAlerts(
-            @PathVariable String teamName,
-            @RequestParam LocalDate start,
-            @RequestParam LocalDate end
-    ) {
-        return alertRepository
-                .findByTeamNameAndDateBetween(teamName, start, end);
+    public List<CapacityAlert> getAlerts(@PathVariable String teamName) {
+        return service.getAlerts(teamName);
     }
 }
+
