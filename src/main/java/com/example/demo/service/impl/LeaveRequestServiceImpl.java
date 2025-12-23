@@ -1,13 +1,14 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.EmployeeProfile;
-import com.example.demo.entity.LeaveRequest;
-import com.example.demo.repository.EmployeeProfileRepository;
-import com.example.demo.repository.LeaveRequestRepository;
-import com.example.demo.service.LeaveRequestService;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.example.demo.entity.Employee;
+import com.example.demo.entity.LeaveRequest;
+import com.example.demo.repository.EmployeeRepository;
+import com.example.demo.repository.LeaveRequestRepository;
+import com.example.demo.service.LeaveRequestService;
 
 @Service
 public class LeaveRequestServiceImpl implements LeaveRequestService {
@@ -15,9 +16,8 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
     private final LeaveRequestRepository leaveRepo;
     private final EmployeeRepository employeeRepo;
 
-    public LeaveRequestServiceImpl(
-            LeaveRequestRepository leaveRepo,
-            EmployeeRepository employeeRepo) {
+    public LeaveRequestServiceImpl(LeaveRequestRepository leaveRepo,
+                                   EmployeeRepository employeeRepo) {
         this.leaveRepo = leaveRepo;
         this.employeeRepo = employeeRepo;
     }
@@ -31,6 +31,21 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         leave.setEmployee(employee);
         leave.setStatus("PENDING");
 
+        return leaveRepo.save(leave);
+    }
+
+    @Override
+    public List<LeaveRequest> getLeavesByEmployee(Long employeeId) {
+        return leaveRepo.findByEmployee_Id(employeeId);
+    }
+
+    @Override
+    public LeaveRequest updateStatus(Long leaveId, String status) {
+
+        LeaveRequest leave = leaveRepo.findById(leaveId)
+                .orElseThrow(() -> new RuntimeException("Leave not found"));
+
+        leave.setStatus(status);
         return leaveRepo.save(leave);
     }
 }
