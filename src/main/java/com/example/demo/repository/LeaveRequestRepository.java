@@ -1,21 +1,20 @@
 package com.example.demo.repository;
 
-import java.time.LocalDate;
-import java.util.List;
-
+import com.example.demo.entity.LeaveRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.example.demo.entity.LeaveRequest;
+import java.time.LocalDate;
+import java.util.List;
 
 public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long> {
+
+    List<LeaveRequest> findByEmployeeId(Long employeeId);
 
     @Query("""
         SELECT l FROM LeaveRequest l
         WHERE l.status = 'APPROVED'
-        AND :date BETWEEN l.startDate AND l.endDate
+        AND :date BETWEEN l.fromDate AND l.toDate
     """)
     List<LeaveRequest> findApprovedOnDate(LocalDate date);
-
-    List<LeaveRequest> findByEmployeeId(Long employeeId);
 }

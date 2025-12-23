@@ -10,20 +10,17 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "leave_requests")
 public class LeaveRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private EmployeeProfile employee;
+    private LocalDate fromDate;
+    private LocalDate toDate;
 
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String type;
-    private String status;
-    private String reason;
+    private String status; // PENDING / APPROVED / REJECTED
+
+    @ManyToOne
+    private EmployeeProfile employee;
 }
