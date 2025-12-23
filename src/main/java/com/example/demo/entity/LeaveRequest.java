@@ -1,23 +1,41 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
 @Entity
-@Table(name = "leave_requests")
-public class LeaveRequest {
+@Table(name = "employee_profiles")
+public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    private Long employeeId;
+    private String fullName;
+    private String email;
+    private String teamName;
+    private String role;
+    private boolean active;
 
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String type;
-    private String status;
-    private String reason;
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Long getEmployeeId() { return employeeId; }
+    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getTeamName() { return teamName; }
+    public void setTeamName(String teamName) { this.teamName = teamName; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }
