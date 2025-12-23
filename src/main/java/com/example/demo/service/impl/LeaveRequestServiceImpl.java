@@ -13,48 +13,24 @@ import java.util.List;
 public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     private final LeaveRequestRepository leaveRepo;
-    private final EmployeeProfileRepository employeeRepo;
+    private final EmployeeRepository employeeRepo;
 
     public LeaveRequestServiceImpl(
             LeaveRequestRepository leaveRepo,
-            EmployeeProfileRepository employeeRepo) {
+            EmployeeRepository employeeRepo) {
         this.leaveRepo = leaveRepo;
         this.employeeRepo = employeeRepo;
     }
 
     @Override
-    public LeaveRequest create(Long employeeId, LeaveRequest request) {
-        EmployeeProfile employee = employeeRepo.findById(employeeId)
+    public LeaveRequest createLeave(Long employeeId, LeaveRequest leave) {
+
+        Employee employee = employeeRepo.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        request.setEmployee(employee);
-        request.setStatus("PENDING");
+        leave.setEmployee(employee);
+        leave.setStatus("PENDING");
 
-        return leaveRepo.save(request);
-    }
-
-    @Override
-    public LeaveRequest updateStatus(Long id, String status) {
-        LeaveRequest leave = leaveRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Leave not found"));
-
-        leave.setStatus(status);
         return leaveRepo.save(leave);
-    }
-
-    @Override
-    public LeaveRequest getById(Long id) {
-        return leaveRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Leave not found"));
-    }
-
-    @Override
-    public List<LeaveRequest> getByEmployee(Long employeeId) {
-        return leaveRepo.findByEmployee_Id(employeeId);
-    }
-
-    @Override
-    public List<LeaveRequest> getAll() {
-        return leaveRepo.findAll();
     }
 }

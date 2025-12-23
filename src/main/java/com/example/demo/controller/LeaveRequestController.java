@@ -8,44 +8,20 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/leave-requests")
-@CrossOrigin
 public class LeaveRequestController {
 
-    private final LeaveRequestService service;
+    private final LeaveRequestService leaveService;
 
-    public LeaveRequestController(LeaveRequestService service) {
-        this.service = service;
+    public LeaveRequestController(LeaveRequestService leaveService) {
+        this.leaveService = leaveService;
     }
 
-    // CREATE
     @PostMapping("/{employeeId}")
-    public LeaveRequest create(@PathVariable Long employeeId,
-                               @RequestBody LeaveRequest request) {
-        return service.create(employeeId, request);
-    }
+    public LeaveRequest createLeave(
+            @PathVariable Long employeeId,
+            @RequestBody LeaveRequest leaveRequest) {
 
-    // GET BY ID
-    @GetMapping("/{id}")
-    public LeaveRequest getById(@PathVariable Long id) {
-        return service.getById(id);
-    }
-
-    // GET BY EMPLOYEE
-    @GetMapping("/employee/{employeeId}")
-    public List<LeaveRequest> getByEmployee(@PathVariable Long employeeId) {
-        return service.getByEmployee(employeeId);
-    }
-
-    // GET ALL
-    @GetMapping
-    public List<LeaveRequest> getAll() {
-        return service.getAll();
-    }
-
-    // UPDATE STATUS
-    @PutMapping("/{id}/status")
-    public LeaveRequest updateStatus(@PathVariable Long id,
-                                     @RequestParam String status) {
-        return service.updateStatus(id, status);
+        return leaveService.createLeave(employeeId, leaveRequest);
     }
 }
+
