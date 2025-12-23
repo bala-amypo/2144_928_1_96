@@ -1,37 +1,38 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.TeamCapacityRule;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.TeamCapacityConfigRepository;
-import com.example.demo.service.TeamCapacityRuleService;
 import org.springframework.stereotype.Service;
+import com.example.demo.entity.TeamCapacityRule;
+import com.example.demo.repository.TeamCapacityRuleRepository;
+import com.example.demo.service.TeamCapacityRuleService;
 
 @Service
 public class TeamCapacityRuleServiceImpl implements TeamCapacityRuleService {
 
-    private final TeamCapacityConfigRepository repository;
+    private final TeamCapacityRuleRepository repository;
 
-    public TeamCapacityRuleServiceImpl(TeamCapacityConfigRepository repository) {
+    public TeamCapacityRuleServiceImpl(TeamCapacityRuleRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public TeamCapacityRule createRule(TeamCapacityRule rule) {
+    public TeamCapacityRule create(TeamCapacityRule rule) {
         return repository.save(rule);
     }
 
     @Override
-    public TeamCapacityRule updateRule(Long id, TeamCapacityRule updatedRule) {
-        TeamCapacityRule existing = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Capacity config not found"));
-        existing.setTotalHeadcount(updatedRule.getTotalHeadcount());
-        existing.setMinCapacityPercent(updatedRule.getMinCapacityPercent());
+    public TeamCapacityRule update(Long id, TeamCapacityRule rule) {
+        TeamCapacityRule existing =
+                repository.findById(id).orElseThrow();
+
+        existing.setTeamName(rule.getTeamName());
+        existing.setTotalHeadcount(rule.getTotalHeadcount());
+        existing.setMinCapacityPercent(rule.getMinCapacityPercent());
+
         return repository.save(existing);
     }
 
     @Override
-    public TeamCapacityRule getRuleByTeam(String teamName) {
-        return repository.findByTeamName(teamName)
-                .orElseThrow(() -> new ResourceNotFoundException("Capacity config not found"));
+    public TeamCapacityRule getByTeam(String teamName) {
+        return repository.findByTeamName(teamName);
     }
 }

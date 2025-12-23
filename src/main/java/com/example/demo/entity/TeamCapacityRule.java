@@ -9,18 +9,36 @@ public class TeamCapacityRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String teamName;
-
     private Integer totalHeadcount;
     private Integer minCapacityPercent;
 
-    // REQUIRED getter
+    // ✅ GETTERS & SETTERS
+    public Long getId() {
+        return id;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
     public Integer getTotalHeadcount() {
         return totalHeadcount;
     }
 
+    public void setTotalHeadcount(Integer totalHeadcount) {
+        this.totalHeadcount = totalHeadcount;
+    }
+
     public Integer getMinCapacityPercent() {
         return minCapacityPercent;
+    }
+
+    public void setMinCapacityPercent(Integer minCapacityPercent) {
+        this.minCapacityPercent = minCapacityPercent;
     }
 }
