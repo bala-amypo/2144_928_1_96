@@ -1,23 +1,26 @@
 package com.example.demo.dto;
 
-import java.time.LocalDate;
-import java.util.Map;
-
 public class CapacityAnalysisResultDto {
 
-    private boolean risky;
-    private Map<LocalDate, Double> capacityByDate;
+    private String teamName;
+    private int totalEmployees;
+    private int onLeave;
+    private boolean belowMinimumCapacity;
 
-    public CapacityAnalysisResultDto(boolean risky, Map<LocalDate, Double> capacityByDate) {
-        this.risky = risky;
-        this.capacityByDate = capacityByDate;
+    // getters & setters
+    public String getTeamName() { return teamName; }
+    public void setTeamName(String teamName) { this.teamName = teamName; }
+
+    public int getTotalEmployees() { return totalEmployees; }
+    public void setTotalEmployees(int totalEmployees) {
+        this.totalEmployees = totalEmployees;
     }
 
-    public boolean isRisky() {
-        return risky;
-    }
+    public int getOnLeave() { return onLeave; }
+    public void setOnLeave(int onLeave) { this.onLeave = onLeave; }
 
-    public Map<LocalDate, Double> getCapacityByDate() {
-        return capacityByDate;
+    public boolean isBelowMinimumCapacity() { return belowMinimumCapacity; }
+    public void setBelowMinimumCapacity(boolean belowMinimumCapacity) {
+        this.belowMinimumCapacity = belowMinimumCapacity;
     }
 }

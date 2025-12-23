@@ -11,7 +11,7 @@ public class LeaveRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "employee_id")
     private EmployeeProfile employee;
 
@@ -19,15 +19,16 @@ public class LeaveRequest {
     private LocalDate endDate;
     private String type;
     private String status;
+
+    @Column(length = 500)
     private String reason;
 
     // getters & setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public EmployeeProfile getEmployee() { return employee; }
-    public void setEmployee(EmployeeProfile employee) {
-        this.employee = employee;
-    }
+    public void setEmployee(EmployeeProfile employee) { this.employee = employee; }
 
     public LocalDate getStartDate() { return startDate; }
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
