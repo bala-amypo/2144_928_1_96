@@ -10,13 +10,23 @@ public class TeamCapacityConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String teamName;
-    private int totalHeadcount;
-    private double minCapacityPercent;
 
-    // ✅ GETTERS & SETTERS
+    @Column(nullable = false)
+    private int maxCapacity;
+
+    @Column(nullable = false)
+    private double utilization;
+
+    // ---------- Getters & Setters ----------
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTeamName() {
@@ -27,19 +37,19 @@ public class TeamCapacityConfig {
         this.teamName = teamName;
     }
 
-    public int getTotalHeadcount() {
-        return totalHeadcount;
+    public int getMaxCapacity() {
+        return maxCapacity;
     }
 
-    public void setTotalHeadcount(int totalHeadcount) {
-        this.totalHeadcount = totalHeadcount;
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
     }
 
-    public double getMinCapacityPercent() {
-        return minCapacityPercent;
+    public double getUtilization() {
+        return utilization;
     }
 
-    public void setMinCapacityPercent(double minCapacityPercent) {
-        this.minCapacityPercent = minCapacityPercent;
+    public void setUtilization(double utilization) {
+        this.utilization = utilization;
     }
 }
