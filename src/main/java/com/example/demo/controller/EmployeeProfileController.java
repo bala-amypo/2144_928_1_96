@@ -1,28 +1,25 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.EmployeeProfileDto;
-import com.example.demo.service.EmployeeProfileService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
+import com.example.demo.dto.EmployeeProfileDto;
+import com.example.demo.entity.EmployeeProfile;
+import com.example.demo.mapper.EmployeeProfileMapper;
+import com.example.demo.repository.EmployeeProfileRepository;
 
 @RestController
-@RequestMapping("/api/employees")
-@Tag(name = "Employees")
+@RequestMapping("/employee-profiles")
 public class EmployeeProfileController {
 
-    private final EmployeeProfileService service;
+    private final EmployeeProfileRepository repository;
 
-    public EmployeeProfileController(EmployeeProfileService service) {
-        this.service = service;
+    public EmployeeProfileController(EmployeeProfileRepository repository) {
+        this.repository = repository;
     }
 
     @PostMapping
     public EmployeeProfileDto create(@RequestBody EmployeeProfileDto dto) {
-        return service.create(dto);
-    }
-
-    @GetMapping("/{id}")
-    public EmployeeProfileDto get(@PathVariable Long id) {
-        return service.getById(id);
+        EmployeeProfile entity = EmployeeProfileMapper.toEntity(dto);
+        EmployeeProfile saved = repository.save(entity);
+        return EmployeeProfileMapper.toDto(saved);
     }
 }
