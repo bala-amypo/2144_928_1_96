@@ -19,7 +19,6 @@ public class LeaveRequestController {
     public LeaveRequest createLeave(
             @PathVariable Long employeeId,
             @RequestBody LeaveRequest request) {
-
         return leaveService.createLeave(employeeId, request);
     }
 }
