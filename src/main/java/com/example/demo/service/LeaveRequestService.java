@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.LeaveRequest;
+import java.util.List;
+import com.example.demo.dto.LeaveRequestDto;
 
 public interface LeaveRequestService {
-    LeaveRequest createLeave(Long employeeId, LeaveRequest request);
+    LeaveRequestDto create(LeaveRequestDto dto);
+    List<LeaveRequestDto> getAll();
+    void updateStatus(Long id, String status);
 }

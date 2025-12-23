@@ -11,44 +11,27 @@ import com.example.demo.service.TeamCapacityRuleService;
 @Service
 public class TeamCapacityRuleServiceImpl implements TeamCapacityRuleService {
 
-    private final TeamCapacityRuleRepository repository;
+    private final TeamCapacityRuleRepository repo;
 
-    public TeamCapacityRuleServiceImpl(TeamCapacityRuleRepository repository) {
-        this.repository = repository;
+    public TeamCapacityRuleServiceImpl(TeamCapacityRuleRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public TeamCapacityRule create(TeamCapacityRule rule) {
-        return repository.save(rule);
-    }
-
-    @Override
-    public TeamCapacityRule getByTeam(String teamName) {
-        return repository.findByTeamName(teamName)
-                .orElseThrow(() ->
-                        new RuntimeException("Team capacity rule not found"));
+    public TeamCapacityRule save(TeamCapacityRule rule) {
+        return repo.save(rule);
     }
 
     @Override
     public List<TeamCapacityRule> getAll() {
-        return repository.findAll();
+        return repo.findAll();
     }
 
     @Override
     public TeamCapacityRule update(Long id, TeamCapacityRule rule) {
-        TeamCapacityRule existing = repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Rule not found"));
-
+        TeamCapacityRule existing = repo.findById(id).orElseThrow();
         existing.setTeamName(rule.getTeamName());
-        existing.setTotalHeadcount(rule.getTotalHeadcount());
-        existing.setMinCapacityPercent(rule.getMinCapacityPercent());
-
-        return repository.save(existing);
-    }
-
-    @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
+        existing.setMaxCapacity(rule.getMaxCapacity());
+        return repo.save(existing);
     }
 }

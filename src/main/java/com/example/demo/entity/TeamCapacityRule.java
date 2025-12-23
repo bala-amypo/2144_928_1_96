@@ -3,7 +3,6 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "team_capacity_rules")
 public class TeamCapacityRule {
 
     @Id
@@ -11,8 +10,7 @@ public class TeamCapacityRule {
     private Long id;
 
     private String teamName;
-    private Integer totalHeadcount;
-    private Integer minCapacityPercent;
+    private int maxCapacity;
 
     // getters & setters
     public Long getId() { return id; }
@@ -21,9 +19,6 @@ public class TeamCapacityRule {
     public String getTeamName() { return teamName; }
     public void setTeamName(String teamName) { this.teamName = teamName; }
 
-    public Integer getTotalHeadcount() { return totalHeadcount; }
-    public void setTotalHeadcount(Integer totalHeadcount) { this.totalHeadcount = totalHeadcount; }
-
-    public Integer getMinCapacityPercent() { return minCapacityPercent; }
-    public void setMinCapacityPercent(Integer minCapacityPercent) { this.minCapacityPercent = minCapacityPercent; }
+    public int getMaxCapacity() { return maxCapacity; }
+    public void setMaxCapacity(int maxCapacity) { this.maxCapacity = maxCapacity; }
 }
