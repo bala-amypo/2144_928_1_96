@@ -7,15 +7,16 @@ import com.example.demo.repository.LeaveRequestRepository;
 import com.example.demo.service.LeaveRequestService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     private final LeaveRequestRepository leaveRepo;
     private final EmployeeProfileRepository employeeRepo;
 
-    public LeaveRequestServiceImpl(
-            LeaveRequestRepository leaveRepo,
-            EmployeeProfileRepository employeeRepo) {
+    public LeaveRequestServiceImpl(LeaveRequestRepository leaveRepo,
+                                   EmployeeProfileRepository employeeRepo) {
         this.leaveRepo = leaveRepo;
         this.employeeRepo = employeeRepo;
     }
@@ -33,12 +34,25 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
     }
 
     @Override
-    public LeaveRequest updateStatus(Long leaveId, String status) {
+    public LeaveRequest getById(Long id) {
+        return leaveRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Leave request not found"));
+    }
 
-        LeaveRequest leave = leaveRepo.findById(leaveId)
-                .orElseThrow(() -> new RuntimeException("Leave not found"));
+    @Override
+    public List<LeaveRequest> getByEmployee(Long employeeId) {
+        return leaveRepo.findByEmployee_Id(employeeId);
+    }
 
-        leave.setStatus(status);
-        return leaveRepo.save(leave);
+    @Override
+    public List<LeaveRequest> getAll() {
+        return leaveRepo.findAll();
+    }
+
+    @Override
+    public LeaveRequest updateStatus(Long id, String status) {
+        LeaveRequest request = getById(id);
+        request.setStatus(status);
+        return leaveRepo.save(request);
     }
 }

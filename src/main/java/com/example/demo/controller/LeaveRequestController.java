@@ -18,9 +18,10 @@ public class LeaveRequestController {
     }
 
     // CREATE
-    @PostMapping
-    public LeaveRequest create(@RequestBody LeaveRequest request) {
-        return service.create(request);
+    @PostMapping("/{employeeId}")
+    public LeaveRequest create(@PathVariable Long employeeId,
+                               @RequestBody LeaveRequest request) {
+        return service.create(employeeId, request);
     }
 
     // GET BY ID
@@ -31,7 +32,7 @@ public class LeaveRequestController {
 
     // GET BY EMPLOYEE
     @GetMapping("/employee/{employeeId}")
-    public List<LeaveRequest> getByEmployee(@PathVariable int employeeId) {
+    public List<LeaveRequest> getByEmployee(@PathVariable Long employeeId) {
         return service.getByEmployee(employeeId);
     }
 
@@ -43,9 +44,8 @@ public class LeaveRequestController {
 
     // UPDATE STATUS
     @PutMapping("/{id}/status")
-    public LeaveRequest updateStatus(
-            @PathVariable Long id,
-            @RequestParam String status) {
+    public LeaveRequest updateStatus(@PathVariable Long id,
+                                     @RequestParam String status) {
         return service.updateStatus(id, status);
     }
 }
