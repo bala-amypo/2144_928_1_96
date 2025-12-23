@@ -1,14 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.LeaveRequestDto;
+import com.example.demo.entity.LeaveRequest;
 import com.example.demo.service.LeaveRequestService;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/leaves")
+@RequestMapping("/leave-requests")
+@CrossOrigin
 public class LeaveRequestController {
 
     private final LeaveRequestService service;
@@ -17,34 +17,35 @@ public class LeaveRequestController {
         this.service = service;
     }
 
+    // CREATE
     @PostMapping
-    public LeaveRequestDto create(@RequestBody LeaveRequestDto dto) {
-        return service.create(dto);
+    public LeaveRequest create(@RequestBody LeaveRequest request) {
+        return service.create(request);
     }
 
-    @PutMapping("/{id}/approve")
-    public LeaveRequestDto approve(@PathVariable Long id) {
-        return service.approve(id);
+    // GET BY ID
+    @GetMapping("/{id}")
+    public LeaveRequest getById(@PathVariable Long id) {
+        return service.getById(id);
     }
 
-    @PutMapping("/{id}/reject")
-    public LeaveRequestDto reject(@PathVariable Long id) {
-        return service.reject(id);
-    }
-
+    // GET BY EMPLOYEE
     @GetMapping("/employee/{employeeId}")
-    public List<LeaveRequestDto> getByEmployee(
-            @PathVariable Long employeeId
-    ) {
+    public List<LeaveRequest> getByEmployee(@PathVariable int employeeId) {
         return service.getByEmployee(employeeId);
     }
 
-    @GetMapping("/team-overlap")
-    public List<LeaveRequestDto> getOverlappingForTeam(
-            @RequestParam String teamName,
-            @RequestParam LocalDate start,
-            @RequestParam LocalDate end
-    ) {
-        return service.getOverlappingForTeam(teamName, start, end);
+    // GET ALL
+    @GetMapping
+    public List<LeaveRequest> getAll() {
+        return service.getAll();
+    }
+
+    // UPDATE STATUS
+    @PutMapping("/{id}/status")
+    public LeaveRequest updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+        return service.updateStatus(id, status);
     }
 }
