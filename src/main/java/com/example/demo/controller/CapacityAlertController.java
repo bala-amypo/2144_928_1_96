@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/capacity-alerts")
+@RequestMapping("/capacity-alerts")
 public class CapacityAlertController {
 
     private final CapacityAnalysisService service;
@@ -20,13 +20,12 @@ public class CapacityAlertController {
     }
 
     @PostMapping("/analyze")
-    public void analyze() {
-        service.analyze();
-    }
+    public String analyze(@RequestParam String teamName,
+                           @RequestParam LocalDate start,
+                           @RequestParam LocalDate end) {
 
-    @GetMapping("/team/{teamName}")
-    public List<CapacityAlert> getAlerts(@PathVariable String teamName) {
-        return service.getAlerts(teamName);
+        service.analyzeTeamCapacity(teamName, start, end);
+        return "Capacity analysis completed";
     }
 }
 
