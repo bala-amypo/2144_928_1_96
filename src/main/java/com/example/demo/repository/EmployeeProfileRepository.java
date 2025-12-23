@@ -1,7 +1,8 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.EmployeeProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.entity.EmployeeProfile;
 
-public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile, Long> {
+public interface EmployeeProfileRepository
+        extends JpaRepository<EmployeeProfile, Long> {
 }

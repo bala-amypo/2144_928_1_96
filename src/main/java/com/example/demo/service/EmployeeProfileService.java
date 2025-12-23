@@ -1,11 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.EmployeeProfile;
-
-import java.util.List;
+import com.example.demo.dto.EmployeeProfileDto;
 
 public interface EmployeeProfileService {
-    EmployeeProfile create(EmployeeProfile employee);
-    EmployeeProfile getById(Long id);
-    List<EmployeeProfile> getAll();
+
+    EmployeeProfileDto create(EmployeeProfileDto dto);
+    EmployeeProfileDto getById(Long id);
 }

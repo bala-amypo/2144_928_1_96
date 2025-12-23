@@ -1,25 +1,27 @@
 package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.dto.EmployeeProfileDto;
-import com.example.demo.entity.EmployeeProfile;
-import com.example.demo.mapper.EmployeeProfileMapper;
-import com.example.demo.repository.EmployeeProfileRepository;
+import com.example.demo.service.EmployeeProfileService;
 
 @RestController
-@RequestMapping("/employee-profiles")
+@RequestMapping("/employees")
 public class EmployeeProfileController {
 
-    private final EmployeeProfileRepository repository;
+    private final EmployeeProfileService service;
 
-    public EmployeeProfileController(EmployeeProfileRepository repository) {
-        this.repository = repository;
+    public EmployeeProfileController(EmployeeProfileService service) {
+        this.service = service;
     }
 
     @PostMapping
     public EmployeeProfileDto create(@RequestBody EmployeeProfileDto dto) {
-        EmployeeProfile entity = EmployeeProfileMapper.toEntity(dto);
-        EmployeeProfile saved = repository.save(entity);
-        return EmployeeProfileMapper.toDto(saved);
+        return service.create(dto);
+    }
+
+    @GetMapping("/{id}")
+    public EmployeeProfileDto getById(@PathVariable Long id) {
+        return service.getById(id);
     }
 }

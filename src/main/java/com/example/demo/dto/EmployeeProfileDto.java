@@ -3,17 +3,19 @@ package com.example.demo.dto;
 public class EmployeeProfileDto {
 
     private Long id;
-    private int employeeId;   // ✅ MUST be int
+    private String employeeId;
     private String fullName;
     private String email;
     private String teamName;
     private String role;
+    private boolean active;
 
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public int getEmployeeId() { return employeeId; }
-    public void setEmployeeId(int employeeId) { this.employeeId = employeeId; }
+    public String getEmployeeId() { return employeeId; }
+    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
 
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
@@ -26,4 +28,7 @@ public class EmployeeProfileDto {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }

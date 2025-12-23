@@ -1,29 +1,44 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-public class EmployeeProfile {
+public class TeamCapacityRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String employeeId;
-
-    private String fullName;
-
-    @Column(unique = true)
-    private String email;
-
     private String teamName;
-    private String role;
+    private Integer totalHeadcount;
+    private Integer minCapacityPercent;
 
-    private Boolean active = true;
+    // ✅ GETTERS & SETTERS
+    public Long getId() {
+        return id;
+    }
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    public String getTeamName() {
+        return teamName;
+    }
 
-    // getters & setters
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public Integer getTotalHeadcount() {
+        return totalHeadcount;
+    }
+
+    public void setTotalHeadcount(Integer totalHeadcount) {
+        this.totalHeadcount = totalHeadcount;
+    }
+
+    public Integer getMinCapacityPercent() {
+        return minCapacityPercent;
+    }
+
+    public void setMinCapacityPercent(Integer minCapacityPercent) {
+        this.minCapacityPercent = minCapacityPercent;
+    }
 }
