@@ -12,7 +12,6 @@ public class CapacityAlert {
 
     private String teamName;
     private String message;
-    private boolean resolved;
 
     // getters & setters
     public Long getId() { return id; }
@@ -23,7 +22,4 @@ public class CapacityAlert {
 
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
-
-    public boolean isResolved() { return resolved; }
-    public void setResolved(boolean resolved) { this.resolved = resolved; }
 }

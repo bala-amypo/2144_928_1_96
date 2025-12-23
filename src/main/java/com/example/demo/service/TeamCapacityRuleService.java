@@ -3,10 +3,6 @@ package com.example.demo.service;
 import com.example.demo.entity.TeamCapacityRule;
 
 public interface TeamCapacityRuleService {
-
-    TeamCapacityRule create(TeamCapacityRule rule);
-
-    TeamCapacityRule update(Long id, TeamCapacityRule rule);
-
+    TeamCapacityRule save(TeamCapacityRule rule);
     TeamCapacityRule getByTeam(String teamName);
 }
