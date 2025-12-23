@@ -8,17 +8,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/leave-requests")
 public class LeaveRequestController {
 
-    private final LeaveRequestService leaveService;
+    private final LeaveRequestService service;
 
-    public LeaveRequestController(LeaveRequestService leaveService) {
-        this.leaveService = leaveService;
+    public LeaveRequestController(LeaveRequestService service) {
+        this.service = service;
     }
 
     @PostMapping("/{employeeId}")
-    public LeaveRequest createLeave(
-            @PathVariable Long employeeId,
-            @RequestBody LeaveRequest request) {
+    public LeaveRequest submitLeave(@PathVariable Long employeeId,
+                                    @RequestBody LeaveRequest request) {
+        return service.create(employeeId, request);
+    }
 
-        return leaveService.create(employeeId, request);
+    @PutMapping("/{id}/approve")
+    public LeaveRequest approve(@PathVariable Long id) {
+        return service.approve(id);
+    }
+
+    @PutMapping("/{id}/reject")
+    public LeaveRequest reject(@PathVariable Long id) {
+        return service.reject(id);
+    }
+
+    @GetMapping("/employee/{id}")
+    public List<LeaveRequest> getByEmployee(@PathVariable Long id) {
+        return service.getByEmployee(id);
     }
 }

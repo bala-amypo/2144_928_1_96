@@ -21,6 +21,12 @@ public class EmployeeProfileController {
         return service.create(employee);
     }
 
+    @PutMapping("/{id}")
+    public EmployeeProfile update(@PathVariable Long id,
+                                  @RequestBody EmployeeProfile employee) {
+        return service.update(id, employee);
+    }
+
     @GetMapping("/{id}")
     public EmployeeProfile getById(@PathVariable Long id) {
         return service.getById(id);

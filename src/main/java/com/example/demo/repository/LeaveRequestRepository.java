@@ -5,17 +5,17 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entity.LeaveRequest;
 
 public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long> {
 
-    // ✅ This method FIXES your compilation error
     @Query("""
-        SELECT lr FROM LeaveRequest lr
-        WHERE lr.status = 'APPROVED'
-        AND :date BETWEEN lr.startDate AND lr.endDate
+        SELECT l FROM LeaveRequest l
+        WHERE l.status = 'APPROVED'
+        AND :date BETWEEN l.startDate AND l.endDate
     """)
-    List<LeaveRequest> findApprovedOnDate(@Param("date") LocalDate date);
+    List<LeaveRequest> findApprovedOnDate(LocalDate date);
+
+    List<LeaveRequest> findByEmployeeId(Long employeeId);
 }
