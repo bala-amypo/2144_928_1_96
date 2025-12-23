@@ -11,23 +11,29 @@ public class LeaveRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    private EmployeeProfile employee;
+    @Column(nullable = false)
+    private int employeeId; // BUSINESS employeeId
 
+    @Column(nullable = false)
     private LocalDate startDate;
+
+    @Column(nullable = false)
     private LocalDate endDate;
 
-    private String type;
-    private String status;
+    @Column(nullable = false)
+    private String type; // CASUAL, SICK, etc.
+
+    @Column(nullable = false)
+    private String status; // PENDING, APPROVED, REJECTED
+
     private String reason;
 
-    public LeaveRequest() {}
-
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public EmployeeProfile getEmployee() { return employee; }
-    public void setEmployee(EmployeeProfile employee) { this.employee = employee; }
+    public int getEmployeeId() { return employeeId; }
+    public void setEmployeeId(int employeeId) { this.employeeId = employeeId; }
 
     public LocalDate getStartDate() { return startDate; }
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
