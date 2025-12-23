@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
-import java.util.List;
 import com.example.demo.entity.EmployeeProfile;
 
 public interface EmployeeProfileService {
 
-    List<EmployeeProfile> getByTeam(String teamName);
+    EmployeeProfile create(EmployeeProfile profile);
+    EmployeeProfile getById(Long id);
 }

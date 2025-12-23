@@ -6,6 +6,5 @@ import com.example.demo.entity.LeaveRequest;
 public interface LeaveRequestService {
 
     LeaveRequest create(Long employeeId, LeaveRequest request);
-
     List<LeaveRequest> getByEmployee(Long employeeId);
 }

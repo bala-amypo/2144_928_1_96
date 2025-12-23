@@ -7,5 +7,5 @@ import com.example.demo.entity.LeaveRequest;
 public interface LeaveRequestRepository
         extends JpaRepository<LeaveRequest, Long> {
 
-    List<LeaveRequest> findByEmployee_Id(Long employeeId);
+    List<LeaveRequest> findByEmployeeId(Long employeeId);
 }

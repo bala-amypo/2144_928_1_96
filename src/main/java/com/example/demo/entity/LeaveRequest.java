@@ -1,8 +1,13 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LeaveRequest {
 
     @Id
@@ -13,14 +18,4 @@ public class LeaveRequest {
     private EmployeeProfile employee;
 
     private String status;
-
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public EmployeeProfile getEmployee() { return employee; }
-    public void setEmployee(EmployeeProfile employee) { this.employee = employee; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
 }
