@@ -1,14 +1,11 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.EmployeeProfileDto;
 import com.example.demo.entity.EmployeeProfile;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.EmployeeProfileRepository;
 import com.example.demo.service.EmployeeProfileService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeProfileServiceImpl implements EmployeeProfileService {
@@ -20,30 +17,30 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
     }
 
     @Override
-    public EmployeeProfile createEmployee(EmployeeProfile e) {
+    public EmployeeProfile create(EmployeeProfile e) {
         return repository.save(e);
     }
 
     @Override
-    public EmployeeProfile getEmployeeById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
-    }
+    public EmployeeProfile update(Long id, EmployeeProfile updated) {
+        EmployeeProfile e = repository.findById(id).orElseThrow();
 
-    @Override
-    public EmployeeProfile updateEmployee(Long id, EmployeeProfile updated) {
-        EmployeeProfile e = getEmployeeById(id);
         e.setFullName(updated.getFullName());
         e.setTeamName(updated.getTeamName());
         e.setRole(updated.getRole());
+
         return repository.save(e);
     }
 
     @Override
-    public void deactivateEmployee(Long id) {
-        EmployeeProfile e = getEmployeeById(id);
+    public List<EmployeeProfile> getAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public EmployeeProfile deactivate(Long id) {
+        EmployeeProfile e = repository.findById(id).orElseThrow();
         e.setActive(false);
-        repository.save(e);
+        return repository.save(e);
     }
 }
-
