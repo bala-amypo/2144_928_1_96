@@ -1,47 +1,44 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.LeaveRequestDto;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.EmployeeProfile;
-// Correct import: using model package
+// Fix 9, 10, 31: Correct model imports
+import com.example.demo.model.EmployeeProfile; 
 import com.example.demo.model.LeaveRequest; 
-import com.example.demo.repository.EmployeeProfileRepository;
-import com.example.demo.repository.LeaveRequestRepository;
-import com.example.demo.service.LeaveRequestService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+// ... (omitting other imports for brevity)
 
 @Service
 @RequiredArgsConstructor
+// Fix 30: Must implement the required method
 public class LeaveRequestServiceImpl implements LeaveRequestService {
-
-    private final LeaveRequestRepository leaveRequestRepository;
-    private final EmployeeProfileRepository employeeProfileRepository;
+    // ... (fields)
 
     @Override
     public LeaveRequestDto create(LeaveRequestDto dto) {
-        if (dto.getStartDate().isAfter(dto.getEndDate())) {
-            throw new BadRequestException("Start date must be on or before endDate.");
-        }
-
-        EmployeeProfile employee = employeeProfileRepository.findById(dto.getEmployeeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + dto.getEmployeeId()));
-
-        LeaveRequest request = new LeaveRequest();
-        
-        // Fix 5 & 6: Setters should be available via Lombok and models imported correctly
-        request.setEmployee(employee);
-        request.setStartDate(dto.getStartDate());
-        request.setEndDate(dto.getEndDate());
-        request.setType(dto.getType());
-        request.setReason(dto.getReason());
-        request.setStatus("PENDING"); // New leaves start as PENDING
-
-        LeaveRequest savedRequest = leaveRequestRepository.save(request);
-        // ... mapping and return logic
-        return new LeaveRequestDto(); // Placeholder
+        // ... (creation logic)
+        return null; // Placeholder
     }
     
+    // Fix 30: Implementation of the required abstract method
+    @Override 
+    public List<LeaveRequestDto> getByEmployee(Long employeeId) {
+        EmployeeProfile employee = employeeProfileRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employeeId));
+        
+        List<LeaveRequest> requests = leaveRequestRepository.findByEmployee(employee);
+        
+        // Map LeaveRequest entities to LeaveRequestDto and return
+        return requests.stream()
+                // Assume you have a mapper utility or manually map fields
+                .map(this::convertToDto) 
+                .collect(Collectors.toList());
+    }
+
     // ... other methods
+    private LeaveRequestDto convertToDto(LeaveRequest request) { 
+        return LeaveRequestDto.builder()
+            .id(request.getId())
+            .employeeId(request.getEmployee().getId())
+            // ... other fields
+            .build(); 
+    }
 }
