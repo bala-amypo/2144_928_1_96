@@ -4,8 +4,11 @@ import com.example.demo.entity.TeamCapacityRule;
 import com.example.demo.service.TeamCapacityRuleService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/capacity-rules")
+@RequestMapping("/team-capacity-rules")
+@CrossOrigin
 public class TeamCapacityRuleController {
 
     private final TeamCapacityRuleService service;
@@ -19,8 +22,20 @@ public class TeamCapacityRuleController {
         return service.create(rule);
     }
 
-    @GetMapping("/team/{teamName}")
+    @GetMapping
+    public List<TeamCapacityRule> getAll() {
+        return service.getAll();
+    }
+
+    @GetMapping("/{teamName}")
     public TeamCapacityRule getByTeam(@PathVariable String teamName) {
         return service.getByTeam(teamName);
+    }
+
+    @PutMapping("/{id}")
+    public TeamCapacityRule update(
+            @PathVariable Long id,
+            @RequestBody TeamCapacityRule rule) {
+        return service.update(id, rule);
     }
 }

@@ -17,7 +17,7 @@ public class EmployeeProfile {
     private String email;
     private String teamName;
     private String role;
-    private boolean active = true;
+    private boolean active;
 
     // getters & setters
     public Long getId() { return id; }

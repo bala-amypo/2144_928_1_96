@@ -1,13 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.LeaveRequest;
+import com.example.demo.dto.LeaveRequestDto;
 import com.example.demo.service.LeaveRequestService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/leaves")
+@RequestMapping("/leave-requests")
+@CrossOrigin
 public class LeaveRequestController {
 
     private final LeaveRequestService service;
@@ -16,15 +17,31 @@ public class LeaveRequestController {
         this.service = service;
     }
 
+    // CREATE leave request for an employee
     @PostMapping("/{employeeId}")
-    public LeaveRequest create(
+    public LeaveRequestDto createLeave(
             @PathVariable Long employeeId,
-            @RequestBody LeaveRequest request) {
-        return service.create(employeeId, request);
+            @RequestBody LeaveRequestDto dto) {
+        return service.create(employeeId, dto);
     }
 
-    @GetMapping("/{employeeId}")
-    public List<LeaveRequest> getByEmployee(@PathVariable Long employeeId) {
+    // GET all leave requests
+    @GetMapping
+    public List<LeaveRequestDto> getAll() {
+        return service.getAll();
+    }
+
+    // GET leave requests by employee
+    @GetMapping("/employee/{employeeId}")
+    public List<LeaveRequestDto> getByEmployee(@PathVariable Long employeeId) {
         return service.getByEmployee(employeeId);
+    }
+
+    // UPDATE status
+    @PutMapping("/{id}/status")
+    public LeaveRequestDto updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+        return service.updateStatus(id, status);
     }
 }
