@@ -3,41 +3,31 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "team_capacity_rules")
 public class TeamCapacityRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String teamName;
+
     private Integer totalHeadcount;
     private Integer minCapacityPercent;
 
-    // ✅ GETTERS & SETTERS
-    public Long getId() {
-        return id;
-    }
+    // getters & setters
+    public Long getId() { return id; }
 
-    public String getTeamName() {
-        return teamName;
-    }
+    public String getTeamName() { return teamName; }
+    public void setTeamName(String teamName) { this.teamName = teamName; }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
-
-    public Integer getTotalHeadcount() {
-        return totalHeadcount;
-    }
-
+    public Integer getTotalHeadcount() { return totalHeadcount; }
     public void setTotalHeadcount(Integer totalHeadcount) {
         this.totalHeadcount = totalHeadcount;
     }
 
-    public Integer getMinCapacityPercent() {
-        return minCapacityPercent;
-    }
-
+    public Integer getMinCapacityPercent() { return minCapacityPercent; }
     public void setMinCapacityPercent(Integer minCapacityPercent) {
         this.minCapacityPercent = minCapacityPercent;
     }

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface TeamCapacityConfigRepository
+public interface TeamCapacityRuleRepository
         extends JpaRepository<TeamCapacityRule, Long> {
 
     Optional<TeamCapacityRule> findByTeamName(String teamName);
