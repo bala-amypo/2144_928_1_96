@@ -4,9 +4,7 @@ import com.example.demo.entity.TeamCapacityConfig;
 
 public interface TeamCapacityRuleService {
 
-    TeamCapacityConfig createRule(TeamCapacityConfig rule);
-
-    TeamCapacityConfig updateRule(Long id, TeamCapacityConfig rule);
+    TeamCapacityConfig update(Long id, TeamCapacityConfig updatedRule);
 
     TeamCapacityConfig getRuleByTeam(String teamName);
 }

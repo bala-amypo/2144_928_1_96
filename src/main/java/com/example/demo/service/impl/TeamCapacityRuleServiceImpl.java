@@ -22,11 +22,20 @@ public class TeamCapacityRuleServiceImpl implements TeamCapacityRuleService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Team capacity rule not found"));
 
-        // ✅ DIRECT SET (NO NULL CHECKS)
         rule.setTeamName(updatedRule.getTeamName());
         rule.setTotalHeadcount(updatedRule.getTotalHeadcount());
         rule.setMinCapacityPercent(updatedRule.getMinCapacityPercent());
 
         return repository.save(rule);
+    }
+
+    // ✅ THIS METHOD WAS MISSING
+    @Override
+    public TeamCapacityConfig getRuleByTeam(String teamName) {
+
+        return repository.findByTeamName(teamName)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Team capacity rule not found for team: " + teamName));
     }
 }
