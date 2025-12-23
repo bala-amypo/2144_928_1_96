@@ -19,8 +19,6 @@ public class LeaveRequest {
     private LocalDate endDate;
     private String type;
     private String status;
-
-    @Column(length = 500)
     private String reason;
 
     // getters & setters
