@@ -1,13 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.LeaveRequest;
-import com.example.demo.service.LeaveRequestService;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.entity.LeaveRequest;
+import com.example.demo.service.LeaveRequestService;
+
 @RestController
-@RequestMapping("/leave-requests")
+@RequestMapping("/leave")
 public class LeaveRequestController {
 
     private final LeaveRequestService service;
@@ -17,13 +18,14 @@ public class LeaveRequestController {
     }
 
     @PostMapping("/{employeeId}")
-    public LeaveRequest create(@PathVariable Long employeeId,
-                               @RequestBody LeaveRequest request) {
+    public LeaveRequest create(
+            @PathVariable Long employeeId,
+            @RequestBody LeaveRequest request) {
         return service.create(employeeId, request);
     }
 
-    @GetMapping("/employee/{employeeId}")
-    public List<LeaveRequest> getByEmployee(@PathVariable Long employeeId) {
-        return service.getByEmployee(employeeId);
+    @GetMapping("/employee/{id}")
+    public List<LeaveRequest> getByEmployee(@PathVariable Long id) {
+        return service.getByEmployee(id);
     }
 }

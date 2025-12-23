@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
+import java.util.List;
 import com.example.demo.entity.LeaveRequest;
 
 public interface LeaveRequestService {
-    LeaveRequest createLeaveRequest(Long employeeId,
-                                    LeaveRequest request);
+
+    LeaveRequest create(Long employeeId, LeaveRequest request);
+
+    List<LeaveRequest> getByEmployee(Long employeeId);
 }
