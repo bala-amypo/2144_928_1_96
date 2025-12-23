@@ -8,9 +8,7 @@ public interface EmployeeProfileService {
 
     EmployeeProfile create(EmployeeProfile employee);
 
-    EmployeeProfile update(Long id, EmployeeProfile employee);
+    EmployeeProfile getById(Long id);
 
-    List<EmployeeProfile> getAll();
-
-    EmployeeProfile deactivate(Long id);
+    List<EmployeeProfile> getByTeam(String teamName);
 }

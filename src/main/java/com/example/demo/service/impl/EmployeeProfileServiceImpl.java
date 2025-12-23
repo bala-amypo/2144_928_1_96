@@ -17,30 +17,18 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
     }
 
     @Override
-    public EmployeeProfile create(EmployeeProfile e) {
-        return repository.save(e);
+    public EmployeeProfile create(EmployeeProfile employee) {
+        return repository.save(employee);
     }
 
     @Override
-    public EmployeeProfile update(Long id, EmployeeProfile updated) {
-        EmployeeProfile e = repository.findById(id).orElseThrow();
-
-        e.setFullName(updated.getFullName());
-        e.setTeamName(updated.getTeamName());
-        e.setRole(updated.getRole());
-
-        return repository.save(e);
+    public EmployeeProfile getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
     }
 
     @Override
-    public List<EmployeeProfile> getAll() {
-        return repository.findAll();
-    }
-
-    @Override
-    public EmployeeProfile deactivate(Long id) {
-        EmployeeProfile e = repository.findById(id).orElseThrow();
-        e.setActive(false);
-        return repository.save(e);
+    public List<EmployeeProfile> getByTeam(String teamName) {
+        return repository.findByTeamNameAndActiveTrue(teamName);
     }
 }
