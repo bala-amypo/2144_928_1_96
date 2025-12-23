@@ -1,23 +1,23 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-
 @Entity
 @Table(name = "employee_profiles")
 public class EmployeeProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;   // ✅ MUST be Long
 
-    private Long employeeId;
+    private Integer employeeId;
     private String fullName;
     private String email;
     private String teamName;
     private String role;
     private boolean active;
 
-    // ✅ Getters & Setters
+    // getters & setters
+
     public Long getId() { return id; }
 
     public Long getEmployeeId() { return employeeId; }

@@ -20,69 +20,30 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
     }
 
     @Override
-    public EmployeeProfileDto create(EmployeeProfileDto dto) {
-        EmployeeProfile e = new EmployeeProfile();
-        e.setEmployeeId(dto.getEmployeeId()); // ✅ int → int
-        e.setFullName(dto.getFullName());
-        e.setEmail(dto.getEmail());
-        e.setTeamName(dto.getTeamName());
-        e.setRole(dto.getRole());
-        e.setActive(true);
-
-        EmployeeProfile saved = repository.save(e);
-        dto.setId(saved.getId());
-        return dto;
+    public EmployeeProfile createEmployee(EmployeeProfile e) {
+        return repository.save(e);
     }
 
     @Override
-    public EmployeeProfileDto update(Long id, EmployeeProfileDto dto) {
-        EmployeeProfile e = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
-
-        e.setFullName(dto.getFullName());
-        e.setTeamName(dto.getTeamName());
-        e.setRole(dto.getRole());
-
-        repository.save(e);
-        dto.setId(e.getId());
-        return dto;
+    public EmployeeProfile getEmployeeById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
     }
 
     @Override
-    public void deactivate(Long id) {
-        EmployeeProfile e = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+    public EmployeeProfile updateEmployee(Long id, EmployeeProfile updated) {
+        EmployeeProfile e = getEmployeeById(id);
+        e.setFullName(updated.getFullName());
+        e.setTeamName(updated.getTeamName());
+        e.setRole(updated.getRole());
+        return repository.save(e);
+    }
+
+    @Override
+    public void deactivateEmployee(Long id) {
+        EmployeeProfile e = getEmployeeById(id);
         e.setActive(false);
         repository.save(e);
     }
-
-    @Override
-    public EmployeeProfileDto getById(Long id) {
-        EmployeeProfile e = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
-        return map(e);
-    }
-
-    @Override
-    public List<EmployeeProfileDto> getByTeam(String teamName) {
-        return repository.findByTeamNameAndActiveTrue(teamName)
-                .stream().map(this::map).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EmployeeProfileDto> getAll() {
-        return repository.findAll()
-                .stream().map(this::map).collect(Collectors.toList());
-    }
-
-    private EmployeeProfileDto map(EmployeeProfile e) {
-        EmployeeProfileDto dto = new EmployeeProfileDto();
-        dto.setId(e.getId());
-        dto.setEmployeeId(e.getEmployeeId()); // ✅ int → int
-        dto.setFullName(e.getFullName());
-        dto.setEmail(e.getEmail());
-        dto.setTeamName(e.getTeamName());
-        dto.setRole(e.getRole());
-        return dto;
-    }
 }
+
