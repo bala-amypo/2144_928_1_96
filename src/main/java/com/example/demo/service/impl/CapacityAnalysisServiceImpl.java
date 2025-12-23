@@ -1,26 +1,21 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.CapacityAnalysisResultDto;
-import com.example.demo.entity.CapacityAlert;
-import com.example.demo.entity.TeamCapacityConfig;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.CapacityAlertRepository;
-import com.example.demo.repository.LeaveRequestRepository;
-import com.example.demo.repository.TeamCapacityConfigRepository;
-import com.example.demo.service.CapacityAnalysisService;
-import com.example.demo.util.DateRangeUtil;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import com.example.demo.entity.TeamCapacityRule;
+import com.example.demo.repository.TeamCapacityRuleRepository;
+import com.example.demo.service.CapacityAnalysisService;
 
 @Service
 public class CapacityAnalysisServiceImpl
         implements CapacityAnalysisService {
 
     private final TeamCapacityRuleRepository repository;
+    private final List<String> alerts = new ArrayList<>();
 
     public CapacityAnalysisServiceImpl(
             TeamCapacityRuleRepository repository) {
@@ -28,12 +23,20 @@ public class CapacityAnalysisServiceImpl
     }
 
     @Override
-    public void analyze() {
-        // logic here
+    public void analyzeTeamCapacity(String teamName,
+                                    LocalDate start,
+                                    LocalDate end) {
+
+        TeamCapacityRule rule =
+                repository.findByTeamName(teamName);
+
+        if (rule != null && rule.getMinCapacityPercent() > 50) {
+            alerts.add("⚠ Capacity risk for team: " + teamName);
+        }
     }
 
     @Override
     public List<String> getAlerts(String teamName) {
-        return List.of("Capacity alert for team " + teamName);
+        return alerts;
     }
 }

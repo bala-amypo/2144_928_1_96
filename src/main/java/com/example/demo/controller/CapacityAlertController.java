@@ -1,31 +1,34 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.CapacityAnalysisResultDto;
-import com.example.demo.entity.CapacityAlert;
-import com.example.demo.repository.CapacityAlertRepository;
-import com.example.demo.service.CapacityAnalysisService;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.service.CapacityAnalysisService;
+
 @RestController
-@RequestMapping("/capacity-alerts")
+@RequestMapping("/capacity")
 public class CapacityAlertController {
 
     private final CapacityAnalysisService service;
 
-    public CapacityAlertController(CapacityAnalysisService service) {
+    public CapacityAlertController(
+            CapacityAnalysisService service) {
         this.service = service;
     }
 
     @PostMapping("/analyze")
-    public String analyze(@RequestParam String teamName,
-                           @RequestParam LocalDate start,
-                           @RequestParam LocalDate end) {
+    public void analyze(@RequestParam String teamName) {
+        service.analyzeTeamCapacity(
+                teamName,
+                LocalDate.now(),
+                LocalDate.now().plusDays(5));
+    }
 
-        service.analyzeTeamCapacity(teamName, start, end);
-        return "Capacity analysis completed";
+    @GetMapping("/alerts/{teamName}")
+    public List<String> getAlerts(
+            @PathVariable String teamName) {
+        return service.getAlerts(teamName);
     }
 }
-

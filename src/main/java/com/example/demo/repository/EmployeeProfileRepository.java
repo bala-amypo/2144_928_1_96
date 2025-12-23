@@ -1,10 +1,8 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.EmployeeProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.entity.EmployeeProfile;
 
-import java.util.List;
-
-public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile, Long> {
-    List<EmployeeProfile> findByTeamName(String teamName);
+public interface EmployeeProfileRepository
+        extends JpaRepository<EmployeeProfile, Long> {
 }
