@@ -11,9 +11,9 @@ public class LeaveRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // IMPORTANT: FK points to employee_profiles.id
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
+    // ✅ FOREIGN KEY MUST POINT TO employee_profiles.id
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "employee_id")
     private EmployeeProfile employee;
 
     private LocalDate startDate;

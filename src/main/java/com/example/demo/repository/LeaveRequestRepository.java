@@ -9,11 +9,8 @@ import java.util.List;
 public interface LeaveRequestRepository
         extends JpaRepository<LeaveRequest, Long> {
 
-    List<LeaveRequest> findByEmployee_Id(Long employeeId);
+    List<LeaveRequest> findByEmployee_Id(Long employeeDbId);
 
     List<LeaveRequest> findByStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-            String status,
-            LocalDate date1,
-            LocalDate date2
-    );
+            String status, LocalDate date1, LocalDate date2);
 }

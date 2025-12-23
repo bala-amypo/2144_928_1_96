@@ -1,31 +1,34 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.EmployeeProfile;
+import com.example.demo.entity.LeaveRequest;
+import com.example.demo.repository.EmployeeProfileRepository;
+import com.example.demo.repository.LeaveRequestRepository;
+import com.example.demo.service.LeaveRequestService;
+import org.springframework.stereotype.Service;
+
 @Service
-public class LeaveRequestServiceImpl {
+public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     private final LeaveRequestRepository leaveRepo;
     private final EmployeeProfileRepository employeeRepo;
 
-    public LeaveRequestServiceImpl(
-            LeaveRequestRepository leaveRepo,
-            EmployeeProfileRepository employeeRepo) {
+    public LeaveRequestServiceImpl(LeaveRequestRepository leaveRepo,
+                                   EmployeeProfileRepository employeeRepo) {
         this.leaveRepo = leaveRepo;
         this.employeeRepo = employeeRepo;
     }
 
-    public LeaveRequest create(LeaveRequestDto dto) {
+    @Override
+    public LeaveRequest create(int employeeId, LeaveRequest request) {
 
-        // 🔥 FIND EMPLOYEE BY BUSINESS employeeId
-        EmployeeProfile employee = employeeRepo
-                .findByEmployeeId(dto.getEmployeeId())
+        // ✅ FIND EMPLOYEE BY BUSINESS employeeId
+        EmployeeProfile employee = employeeRepo.findByEmployeeId(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        LeaveRequest leave = new LeaveRequest();
-        leave.setEmployee(employee); // ✅ THIS FIXES FK ERROR
-        leave.setStartDate(dto.getStartDate());
-        leave.setEndDate(dto.getEndDate());
-        leave.setType(dto.getType());
-        leave.setStatus(dto.getStatus());
-        leave.setReason(dto.getReason());
+        request.setEmployee(employee); // ✅ FK SAFE
+        request.setStatus("PENDING");
 
-        return leaveRepo.save(leave);
+        return leaveRepo.save(request);
     }
 }
