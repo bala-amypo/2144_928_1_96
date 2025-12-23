@@ -11,26 +11,29 @@ public class LeaveRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private EmployeeProfile employee;
+    private String teamName;
 
     private LocalDate startDate;
     private LocalDate endDate;
-    private String type;
-    private String status;
-    private String reason;
 
-    // ✅ GETTERS & SETTERS
+    private String status; // APPROVED, PENDING, REJECTED
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private EmployeeProfile employee;
+
+    // ===== GETTERS & SETTERS =====
+
     public Long getId() {
         return id;
     }
 
-    public EmployeeProfile getEmployee() {
-        return employee;
+    public String getTeamName() {
+        return teamName;
     }
 
-    public void setEmployee(EmployeeProfile employee) {
-        this.employee = employee;
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 
     public LocalDate getStartDate() {
@@ -49,14 +52,6 @@ public class LeaveRequest {
         this.endDate = endDate;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -65,11 +60,11 @@ public class LeaveRequest {
         this.status = status;
     }
 
-    public String getReason() {
-        return reason;
+    public EmployeeProfile getEmployee() {
+        return employee;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setEmployee(EmployeeProfile employee) {
+        this.employee = employee;
     }
 }

@@ -1,23 +1,20 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.LeaveRequestDto;
+import com.example.demo.entity.LeaveRequest;
+import com.example.demo.entity.EmployeeProfile;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface LeaveRequestService {
 
-    LeaveRequestDto create(LeaveRequestDto dto);
+    LeaveRequest applyLeave(LeaveRequest request);
 
-    LeaveRequestDto approve(Long id);
+    List<LeaveRequest> getLeavesByEmployee(EmployeeProfile employee);
 
-    LeaveRequestDto reject(Long id);
-
-    List<LeaveRequestDto> getByEmployee(Long employeeId);
-
-    List<LeaveRequestDto> getOverlappingForTeam(
+    List<LeaveRequest> getApprovedOverlappingLeaves(
             String teamName,
-            LocalDate start,
-            LocalDate end
+            LocalDate startDate,
+            LocalDate endDate
     );
 }
