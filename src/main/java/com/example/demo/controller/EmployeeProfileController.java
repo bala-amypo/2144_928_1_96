@@ -17,14 +17,8 @@ public class EmployeeProfileController {
     }
 
     @PostMapping
-    public EmployeeProfile create(@RequestBody EmployeeProfile employee) {
-        return service.create(employee);
-    }
-
-    @PutMapping("/{id}")
-    public EmployeeProfile update(@PathVariable Long id,
-                                  @RequestBody EmployeeProfile employee) {
-        return service.update(id, employee);
+    public EmployeeProfile create(@RequestBody EmployeeProfile e) {
+        return service.create(e);
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.TeamCapacityConfig;
+import com.example.demo.entity.TeamCapacityRule;
 import com.example.demo.service.TeamCapacityRuleService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +19,8 @@ public class TeamCapacityRuleController {
         return service.create(rule);
     }
 
-    @PutMapping("/{id}")
-    public TeamCapacityRule update(@PathVariable Long id,
-                                   @RequestBody TeamCapacityRule rule) {
-        return service.update(id, rule);
-    }
-
     @GetMapping("/team/{teamName}")
     public TeamCapacityRule getByTeam(@PathVariable String teamName) {
         return service.getByTeam(teamName);
     }
 }
-

@@ -16,19 +16,15 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
         this.repository = repository;
     }
 
-    @Override
     public EmployeeProfile create(EmployeeProfile employee) {
         return repository.save(employee);
     }
 
-    @Override
     public EmployeeProfile getById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        return repository.findById(id).orElseThrow();
     }
 
-    @Override
     public List<EmployeeProfile> getByTeam(String teamName) {
-        return repository.findByTeamNameAndActiveTrue(teamName);
+        return repository.findByTeamName(teamName);
     }
 }

@@ -1,50 +1,20 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.TeamCapacityConfig;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.TeamCapacityConfigRepository;
-import com.example.demo.service.TeamCapacityRuleService;
+import com.example.demo.repository.LeaveRequestRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
-public class TeamCapacityRuleServiceImpl implements TeamCapacityRuleService {
+public class CapacityAnalysisServiceImpl {
 
-    private final TeamCapacityConfigRepository repository;
+    private final LeaveRequestRepository leaveRepo;
 
-    public TeamCapacityRuleServiceImpl(TeamCapacityConfigRepository repository) {
-        this.repository = repository;
+    public CapacityAnalysisServiceImpl(LeaveRequestRepository leaveRepo) {
+        this.leaveRepo = leaveRepo;
     }
 
-    @Override
-    public TeamCapacityConfig createRule(TeamCapacityConfig rule) {
-
-        if (rule.getTotalHeadcount() <= 0) {
-            throw new BadRequestException("Invalid total headcount");
-        }
-        if (rule.getMinCapacityPercent() < 1 || rule.getMinCapacityPercent() > 100) {
-            throw new BadRequestException("Invalid capacity percent");
-        }
-
-        return repository.save(rule);
-    }
-
-    @Override
-    public TeamCapacityConfig updateRule(Long id, TeamCapacityConfig updatedRule) {
-
-        TeamCapacityConfig existing = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Capacity rule not found"));
-
-        existing.setTeamName(updatedRule.getTeamName());
-        existing.setTotalHeadcount(updatedRule.getTotalHeadcount());
-        existing.setMinCapacityPercent(updatedRule.getMinCapacityPercent());
-
-        return repository.save(existing);
-    }
-
-    @Override
-    public TeamCapacityConfig getRuleByTeam(String teamName) {
-        return repository.findByTeamName(teamName)
-                .orElseThrow(() -> new ResourceNotFoundException("Capacity config not found"));
+    public int countApprovedToday() {
+        return leaveRepo.findApprovedOnDate(LocalDate.now()).size();
     }
 }

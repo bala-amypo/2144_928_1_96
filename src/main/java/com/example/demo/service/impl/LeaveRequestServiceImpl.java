@@ -7,6 +7,8 @@ import com.example.demo.repository.LeaveRequestRepository;
 import com.example.demo.service.LeaveRequestService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LeaveRequestServiceImpl implements LeaveRequestService {
 
@@ -19,15 +21,14 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         this.employeeRepo = employeeRepo;
     }
 
-    @Override
     public LeaveRequest create(Long employeeId, LeaveRequest request) {
-
-        EmployeeProfile employee = employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
-
-        request.setEmployee(employee);
+        EmployeeProfile emp = employeeRepo.findById(employeeId).orElseThrow();
+        request.setEmployee(emp);
         request.setStatus("PENDING");
-
         return leaveRepo.save(request);
+    }
+
+    public List<LeaveRequest> getByEmployee(Long employeeId) {
+        return leaveRepo.findByEmployeeId(employeeId);
     }
 }
