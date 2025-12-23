@@ -1,20 +1,37 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.repository.LeaveRequestRepository;
+import com.example.demo.entity.TeamCapacityRule;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.TeamCapacityConfigRepository;
+import com.example.demo.service.TeamCapacityRuleService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-
 @Service
-public class CapacityAnalysisServiceImpl {
+public class TeamCapacityRuleServiceImpl implements TeamCapacityRuleService {
 
-    private final LeaveRequestRepository leaveRepo;
+    private final TeamCapacityConfigRepository repository;
 
-    public CapacityAnalysisServiceImpl(LeaveRequestRepository leaveRepo) {
-        this.leaveRepo = leaveRepo;
+    public TeamCapacityRuleServiceImpl(TeamCapacityConfigRepository repository) {
+        this.repository = repository;
     }
 
-    public int countApprovedToday() {
-        return leaveRepo.findApprovedOnDate(LocalDate.now()).size();
+    @Override
+    public TeamCapacityRule createRule(TeamCapacityRule rule) {
+        return repository.save(rule);
+    }
+
+    @Override
+    public TeamCapacityRule updateRule(Long id, TeamCapacityRule updatedRule) {
+        TeamCapacityRule existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Capacity config not found"));
+        existing.setTotalHeadcount(updatedRule.getTotalHeadcount());
+        existing.setMinCapacityPercent(updatedRule.getMinCapacityPercent());
+        return repository.save(existing);
+    }
+
+    @Override
+    public TeamCapacityRule getRuleByTeam(String teamName) {
+        return repository.findByTeamName(teamName)
+                .orElseThrow(() -> new ResourceNotFoundException("Capacity config not found"));
     }
 }

@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CapacityAnalysisResultDto;
-import com.example.demo.model.CapacityAlert; // CORRECTED IMPORT
+import com.example.demo.entity.CapacityAlert; // CORRECTED IMPORT
 import com.example.demo.repository.CapacityAlertRepository;
 import com.example.demo.service.CapacityAnalysisService;
 import lombok.RequiredArgsConstructor;
