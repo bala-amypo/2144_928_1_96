@@ -13,15 +13,15 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
     private final LeaveRequestRepository leaveRepo;
     private final EmployeeProfileRepository employeeRepo;
 
-    public LeaveRequestServiceImpl(
-            LeaveRequestRepository leaveRepo,
-            EmployeeProfileRepository employeeRepo) {
+    public LeaveRequestServiceImpl(LeaveRequestRepository leaveRepo,
+                                   EmployeeProfileRepository employeeRepo) {
         this.leaveRepo = leaveRepo;
         this.employeeRepo = employeeRepo;
     }
 
     @Override
-    public LeaveRequest createLeave(Long employeeId, LeaveRequest request) {
+    public LeaveRequest create(Long employeeId, LeaveRequest request) {
+
         EmployeeProfile employee = employeeRepo.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 

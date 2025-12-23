@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/leave-requests")
-@CrossOrigin
 public class LeaveRequestController {
 
     private final LeaveRequestService leaveService;
@@ -19,6 +18,7 @@ public class LeaveRequestController {
     public LeaveRequest createLeave(
             @PathVariable Long employeeId,
             @RequestBody LeaveRequest request) {
-        return leaveService.createLeave(employeeId, request);
+
+        return leaveService.create(employeeId, request);
     }
 }
