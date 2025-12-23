@@ -22,7 +22,6 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     @Override
     public LeaveRequest createLeave(Long employeeId, LeaveRequest request) {
-
         EmployeeProfile employee = employeeRepo.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 

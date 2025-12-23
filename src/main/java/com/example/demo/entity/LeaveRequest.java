@@ -1,72 +1,44 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "employee_profiles")
-public class EmployeeProfile {
+@Table(name = "leave_requests")
+public class LeaveRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long employeeId;
-    private String fullName;
-    private String email;
-    private String teamName;
-    private String role;
-    private boolean active;
+    @ManyToOne
+    @JoinColumn(name = "employee_id", nullable = false)
+    private EmployeeProfile employee;
 
-    // ===== GETTERS & SETTERS =====
-    public Long getId() {
-        return id;
-    }
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String type;
+    private String status;
+    private String reason;
 
-    public Long getEmployeeId() {
-        return employeeId;
-    }
+    // ✅ Getters & Setters
+    public Long getId() { return id; }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
+    public EmployeeProfile getEmployee() { return employee; }
+    public void setEmployee(EmployeeProfile employee) { this.employee = employee; }
 
-    public String getFullName() {
-        return fullName;
-    }
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+    public LocalDate getEndDate() { return endDate; }
+    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public String getTeamName() {
-        return teamName;
-    }
-
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
 }
