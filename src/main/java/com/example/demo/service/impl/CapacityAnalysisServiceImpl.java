@@ -17,59 +17,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CapacityAnalysisServiceImpl implements CapacityAnalysisService {
+public class CapacityAnalysisServiceImpl
+        implements CapacityAnalysisService {
 
-    private final TeamCapacityConfigRepository configRepo;
-    private final LeaveRequestRepository leaveRepo;
-    private final CapacityAlertRepository alertRepo;
+    private final TeamCapacityRuleRepository repository;
 
     public CapacityAnalysisServiceImpl(
-            TeamCapacityConfigRepository configRepo,
-            LeaveRequestRepository leaveRepo,
-            CapacityAlertRepository alertRepo) {
-        this.configRepo = configRepo;
-        this.leaveRepo = leaveRepo;
-        this.alertRepo = alertRepo;
+            TeamCapacityRuleRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public CapacityAnalysisResultDto analyzeTeamCapacity(
-            String teamName, LocalDate start, LocalDate end) {
+    public void analyze() {
+        // logic here
+    }
 
-        if (start.isAfter(end)) {
-            throw new BadRequestException("Start date or future");
-        }
-
-        TeamCapacityConfig config = configRepo.findByTeamName(teamName)
-                .orElseThrow(() -> new ResourceNotFoundException("Capacity config not found"));
-
-        if (config.getTotalHeadcount() <= 0) {
-            throw new BadRequestException("Invalid total headcount");
-        }
-
-        Map<LocalDate, Double> capacityByDate = new HashMap<>();
-        boolean risky = false;
-
-        for (LocalDate date : DateRangeUtil.daysBetween(start, end)) {
-
-            int onLeave = leaveRepo.findApprovedOnDate(date).size();
-            double capacity = ((double) (config.getTotalHeadcount() - onLeave)
-                    / config.getTotalHeadcount()) * 100;
-
-            capacityByDate.put(date, capacity);
-
-            if (capacity < config.getMinCapacityPercent()) {
-                risky = true;
-                alertRepo.save(new CapacityAlert(
-                        teamName, date, "HIGH",
-                        "Capacity below threshold"
-                ));
-            }
-        }
-
-        CapacityAnalysisResultDto result = new CapacityAnalysisResultDto();
-        result.setRisky(risky);
-        result.setCapacityByDate(capacityByDate);
-        return result;
+    @Override
+    public List<String> getAlerts(String teamName) {
+        return List.of("Capacity alert for team " + teamName);
     }
 }

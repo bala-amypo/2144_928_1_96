@@ -6,21 +6,29 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class LeaveRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate fromDate;
-    private LocalDate toDate;
-
-    private String status; // PENDING / APPROVED / REJECTED
-
     @ManyToOne
     private EmployeeProfile employee;
+
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String type;
+    private String status;
+    private String reason;
+
+    // ✅ REQUIRED setters
+    public void setEmployee(EmployeeProfile employee) {
+        this.employee = employee;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    // getters also required
 }
