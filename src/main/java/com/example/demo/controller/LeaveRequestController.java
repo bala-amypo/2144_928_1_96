@@ -1,11 +1,8 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.entity.LeaveRequest;
 import com.example.demo.service.LeaveRequestService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/leave-requests")
@@ -21,21 +18,8 @@ public class LeaveRequestController {
     @PostMapping("/{employeeId}")
     public LeaveRequest createLeave(
             @PathVariable Long employeeId,
-            @RequestBody LeaveRequest leaveRequest) {
+            @RequestBody LeaveRequest request) {
 
-        return leaveService.createLeave(employeeId, leaveRequest);
-    }
-
-    @GetMapping("/employee/{employeeId}")
-    public List<LeaveRequest> getLeaves(@PathVariable Long employeeId) {
-        return leaveService.getLeavesByEmployee(employeeId);
-    }
-
-    @PutMapping("/{leaveId}/status/{status}")
-    public LeaveRequest updateStatus(
-            @PathVariable Long leaveId,
-            @PathVariable String status) {
-
-        return leaveService.updateStatus(leaveId, status);
+        return leaveService.createLeave(employeeId, request);
     }
 }
