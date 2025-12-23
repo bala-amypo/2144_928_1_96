@@ -1,26 +1,34 @@
 package com.example.demo.service.impl;
 
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
-
 import com.example.demo.entity.EmployeeProfile;
 import com.example.demo.repository.EmployeeProfileRepository;
 import com.example.demo.service.EmployeeProfileService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-public class EmployeeProfileServiceImpl
-        implements EmployeeProfileService {
+public class EmployeeProfileServiceImpl implements EmployeeProfileService {
 
     private final EmployeeProfileRepository repository;
 
+    public EmployeeProfileServiceImpl(EmployeeProfileRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
-    public EmployeeProfile create(EmployeeProfile profile) {
-        return repository.save(profile);
+    public EmployeeProfile create(EmployeeProfile employee) {
+        return repository.save(employee);
     }
 
     @Override
     public EmployeeProfile getById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+    }
+
+    @Override
+    public List<EmployeeProfile> getAll() {
+        return repository.findAll();
     }
 }

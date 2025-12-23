@@ -1,44 +1,43 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.LeaveRequestDto;
-// Fix 9, 10, 31: Correct model imports
-import com.example.demo.model.EmployeeProfile; 
-import com.example.demo.model.LeaveRequest; 
-// ... (omitting other imports for brevity)
+import com.example.demo.entity.EmployeeProfile;
+import com.example.demo.entity.LeaveRequest;
+import com.example.demo.repository.EmployeeProfileRepository;
+import com.example.demo.repository.LeaveRequestRepository;
+import com.example.demo.service.LeaveRequestService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-// Fix 30: Must implement the required method
 public class LeaveRequestServiceImpl implements LeaveRequestService {
-    // ... (fields)
+
+    private final LeaveRequestRepository leaveRepo;
+    private final EmployeeProfileRepository employeeRepo;
+
+    public LeaveRequestServiceImpl(
+            LeaveRequestRepository leaveRepo,
+            EmployeeProfileRepository employeeRepo) {
+        this.leaveRepo = leaveRepo;
+        this.employeeRepo = employeeRepo;
+    }
 
     @Override
-    public LeaveRequestDto create(LeaveRequestDto dto) {
-        // ... (creation logic)
-        return null; // Placeholder
-    }
-    
-    // Fix 30: Implementation of the required abstract method
-    @Override 
-    public List<LeaveRequestDto> getByEmployee(Long employeeId) {
-        EmployeeProfile employee = employeeProfileRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employeeId));
-        
-        List<LeaveRequest> requests = leaveRequestRepository.findByEmployee(employee);
-        
-        // Map LeaveRequest entities to LeaveRequestDto and return
-        return requests.stream()
-                // Assume you have a mapper utility or manually map fields
-                .map(this::convertToDto) 
-                .collect(Collectors.toList());
+    public LeaveRequest create(Long employeeId, LeaveRequest request) {
+        EmployeeProfile employee = employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        request.setEmployee(employee);
+        request.setStatus("PENDING");
+
+        return leaveRepo.save(request);
     }
 
-    // ... other methods
-    private LeaveRequestDto convertToDto(LeaveRequest request) { 
-        return LeaveRequestDto.builder()
-            .id(request.getId())
-            .employeeId(request.getEmployee().getId())
-            // ... other fields
-            .build(); 
+    @Override
+    public List<LeaveRequest> getByEmployee(Long employeeId) {
+        EmployeeProfile employee = employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        return leaveRepo.findByEmployee(employee);
     }
 }
