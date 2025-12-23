@@ -11,8 +11,8 @@ public class LeaveRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "employee_id")
     private EmployeeProfile employee;
 
     private LocalDate startDate;
