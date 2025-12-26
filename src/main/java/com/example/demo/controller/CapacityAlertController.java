@@ -1,5 +1,4 @@
 package com.example.demo.controller;
-
 import com.example.demo.dto.CapacityAnalysisResultDto;
 import com.example.demo.model.CapacityAlert;
 import com.example.demo.repository.CapacityAlertRepository;

@@ -1,5 +1,4 @@
 package com.example.demo.controller;
-entity
 import com.example.demo.dto.EmployeeProfileDto;
 import com.example.demo.service.EmployeeProfileService;
 import io.swagger.v3.oas.annotations.Operation;
