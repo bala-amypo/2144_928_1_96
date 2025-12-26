@@ -71,7 +71,7 @@
         </dependency>
 
         <!-- ========================= -->
-        <!-- JWT (JJWT 0.12.3 – REQUIRED SET) -->
+        <!-- JWT (JJWT 0.12.3 – CORRECT SET) -->
         <!-- ========================= -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
