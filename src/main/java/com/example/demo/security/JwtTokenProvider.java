@@ -12,20 +12,14 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
     
-    @Value("${app.jwt.secret}")
+    @Value("${app.jwt.secret:5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437}")
     private String jwtSecret;
     
-    @Value("${app.jwt.expiration}")
+    @Value("${app.jwt.expiration:86400000}")
     private long jwtExpiration;
     
     private SecretKey getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes();
-        // Ensure the key is at least 256 bits (32 bytes)
-        if (keyBytes.length < 32) {
-            byte[] paddedKey = new byte[32];
-            System.arraycopy(keyBytes, 0, paddedKey, 0, Math.min(keyBytes.length, 32));
-            keyBytes = paddedKey;
-        }
         return Keys.hmacShaKeyFor(keyBytes);
     }
     
