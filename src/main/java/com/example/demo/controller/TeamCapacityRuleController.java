@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.TeamCapacityConfig;
+import com.example.demo.model.TeamCapacityConfig;
 import com.example.demo.service.TeamCapacityRuleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
