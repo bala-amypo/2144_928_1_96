@@ -17,16 +17,6 @@ public class Employee {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    public Employee() {
-    }
-
-    public Employee(Long id, String name, String email, Team team) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.team = team;
-    }
-
     public Long getId() {
         return id;
     }

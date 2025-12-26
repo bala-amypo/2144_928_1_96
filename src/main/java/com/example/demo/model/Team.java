@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "teams")
@@ -12,19 +11,7 @@ public class Team {
     private Long id;
 
     private String name;
-    private Integer capacity;
-
-    @OneToMany(mappedBy = "team")
-    private List<Employee> employees;
-
-    public Team() {
-    }
-
-    public Team(Long id, String name, Integer capacity) {
-        this.id = id;
-        this.name = name;
-        this.capacity = capacity;
-    }
+    private int capacity;
 
     public Long getId() {
         return id;
@@ -42,19 +29,11 @@ public class Team {
         this.name = name;
     }
 
-    public Integer getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(Integer capacity) {
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
-    }
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
     }
 }

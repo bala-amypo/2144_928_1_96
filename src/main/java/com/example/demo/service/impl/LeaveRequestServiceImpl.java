@@ -23,8 +23,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     @Override
     public LeaveRequest getLeaveById(Long id) {
-        return leaveRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Leave not found with id " + id));
+        return leaveRequestRepository.findById(id).orElse(null);
     }
 
     @Override

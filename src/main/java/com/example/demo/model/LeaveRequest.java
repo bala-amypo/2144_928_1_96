@@ -13,15 +13,13 @@ public class LeaveRequest {
 
     private LocalDate startDate;
     private LocalDate endDate;
-
     private String reason;
     private String status;
 
-    // ----- Constructors -----
-    public LeaveRequest() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
-    // ----- Getters & Setters -----
     public Long getId() {
         return id;
     }
@@ -60,5 +58,13 @@ public class LeaveRequest {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }
