@@ -6,7 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor; // This import needs Lombok
+import lombok.RequiredArgsConstructor; 
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,9 +15,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+// FIX: Added missing Collections import
+import java.util.Collections; 
 
 @Component
-@RequiredArgsConstructor // Compiler error fix (requires Lombok)
+@RequiredArgsConstructor 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
@@ -34,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserAccount user = userRepo.findByEmail(email).orElse(null);
 
                 if (user != null) {
-                    // This is a minimal authentication setup for the user's role/email
+                    // Minimal authentication setup using Collections.emptyList() for no assigned authorities
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             user, null, Collections.emptyList()); 
                     

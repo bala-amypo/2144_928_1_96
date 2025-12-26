@@ -1,3 +1,5 @@
+// File: src/main/java/com/example/demo/service/impl/TeamCapacityRuleServiceImpl.java
+
 package com.example.demo.service.impl;
 
 import com.example.demo.model.TeamCapacityConfig;
@@ -6,12 +8,12 @@ import com.example.demo.service.TeamCapacityRuleService;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.BadRequestException;
 
-import lombok.RequiredArgsConstructor; // Compiler error fix (requires Lombok)
+import lombok.RequiredArgsConstructor; // FIX: Ensure this import is present
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor // Compiler error fix (requires Lombok)
+@RequiredArgsConstructor 
 public class TeamCapacityRuleServiceImpl implements TeamCapacityRuleService {
 
     private final TeamCapacityConfigRepository configRepo;
@@ -21,9 +23,9 @@ public class TeamCapacityRuleServiceImpl implements TeamCapacityRuleService {
         if (rule.getMinCapacityPercent() < 0 || rule.getMinCapacityPercent() > 100) {
             throw new BadRequestException("Min Capacity Percent must be between 0 and 100.");
         }
-        // Added guard for totalHeadcount reference from the compiler error
+        // FIX: Ensure get/set methods are correctly called on 'rule'
         if (rule.getTotalHeadcount() <= 0) {
-             rule.setTotalHeadcount(1); // Set a default value to prevent division by zero in analysis
+             rule.setTotalHeadcount(1); 
         }
         return configRepo.save(rule);
     }
@@ -42,7 +44,7 @@ public class TeamCapacityRuleServiceImpl implements TeamCapacityRuleService {
             }
             existing.setMinCapacityPercent(rule.getMinCapacityPercent());
         }
-        // Added handling for totalHeadcount reference from the compiler error
+        // FIX: Ensure get/set methods are correctly called on 'rule'
         if (rule.getTotalHeadcount() > 0) {
             existing.setTotalHeadcount(rule.getTotalHeadcount());
         }
