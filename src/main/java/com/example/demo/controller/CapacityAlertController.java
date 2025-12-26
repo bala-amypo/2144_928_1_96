@@ -1,14 +1,23 @@
 package com.example.demo.controller;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.model.CapacityAlert;
+import com.example.demo.service.CapacityAnalysisService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/capacity-alerts")
-@SecurityRequirement(name = "bearerAuth")
-@Tag(name = "Capacity Alerts", description = "View generated capacity alerts")
+@RequestMapping("/alerts")
 public class CapacityAlertController {
-    // Controller placeholder
+
+    private final CapacityAnalysisService analysisService;
+
+    public CapacityAlertController(CapacityAnalysisService analysisService) {
+        this.analysisService = analysisService;
+    }
+
+    @GetMapping
+    public List<CapacityAlert> getAlerts() {
+        return analysisService.getAllAlerts();
+    }
 }

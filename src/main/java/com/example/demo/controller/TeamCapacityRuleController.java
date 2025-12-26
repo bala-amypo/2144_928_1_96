@@ -1,14 +1,28 @@
 package com.example.demo.controller;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.model.TeamCapacityConfig;
+import com.example.demo.service.TeamCapacityRuleService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/capacity-rules")
-@SecurityRequirement(name = "bearerAuth")
-@Tag(name = "Capacity Rules", description = "Manage team minimum capacity configuration")
+@RequestMapping("/capacity-rules")
 public class TeamCapacityRuleController {
-    // Controller placeholder
+
+    private final TeamCapacityRuleService ruleService;
+
+    public TeamCapacityRuleController(TeamCapacityRuleService ruleService) {
+        this.ruleService = ruleService;
+    }
+
+    @PostMapping
+    public TeamCapacityConfig save(@RequestBody TeamCapacityConfig config) {
+        return ruleService.saveConfig(config);
+    }
+
+    @GetMapping
+    public List<TeamCapacityConfig> getAll() {
+        return ruleService.getAllConfigs();
+    }
 }
