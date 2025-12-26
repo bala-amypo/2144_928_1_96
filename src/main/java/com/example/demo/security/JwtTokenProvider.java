@@ -1,8 +1,9 @@
 package com.example.demo.security;
 
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtTokenProvider {
 
-    // MUST exist (tests / reflection / config)
+    // MUST exist (reflection / config)
     private String jwtSecret = "defaultSecretKeyMustBeAtLeast32CharsLong";
 
     private final long jwtExpirationMs = 86400000;
@@ -23,12 +24,11 @@ public class JwtTokenProvider {
     public JwtTokenProvider() {
     }
 
-    // 🔑 Signing Key (JJWT 0.12.x)
-    private Key getSigningKey() {
+    // 🔑 Correct key type for JJWT 0.12.x
+    private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // ✅ Generate JWT
     public String generateToken(UserAccount user) {
         return Jwts.builder()
                 .subject(user.getEmail())
@@ -40,7 +40,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // ✅ Validate JWT
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
@@ -53,23 +52,19 @@ public class JwtTokenProvider {
         }
     }
 
-    // ✅ Extract Email
     public String getEmail(String token) {
         return getClaims(token).getSubject();
     }
 
-    // ✅ Extract Role
     public String getRole(String token) {
         return (String) getClaims(token).get("role");
     }
 
-    // ✅ Extract User ID
     public Long getUserId(String token) {
         Object id = getClaims(token).get("userId");
         return id == null ? null : Long.valueOf(id.toString());
     }
 
-    // 🔍 Internal Claims Parser
     private Claims getClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
