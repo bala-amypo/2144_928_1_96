@@ -1,0 +1,7 @@
+package com.example.demo.model;
+
+public class UserAccount {
+    public Long id;
+    public String email;
+    public String role;
+}
