@@ -5,35 +5,30 @@ import com.example.demo.dto.AuthResponse;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.model.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
-import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
-@Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserAccountRepository userRepo;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final JwtTokenProvider tokenProvider;
 
-    // Specific constructor required by TestNG setup
-    public AuthServiceImpl(UserAccountRepository userRepo, BCryptPasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider) {
+    public AuthServiceImpl(UserAccountRepository userRepo) {
         this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
-        this.tokenProvider = tokenProvider;
     }
 
     @Override
-    public AuthResponse authenticate(AuthRequest req) {
-        UserAccount user = userRepo.findByEmail(req.getEmail())
-                .orElseThrow(() -> new BadRequestException("User not found or invalid credentials."));
+    public AuthResponse authenticate(AuthRequest request) {
 
-        if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
-            throw new BadRequestException("Invalid password.");
+        UserAccount user = userRepo.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadRequestException("Invalid credentials"));
+
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new BadRequestException("Invalid credentials");
         }
 
-        String token = tokenProvider.generateToken(user);
-        return new AuthResponse(token, user.getRole());
+        return new AuthResponse(
+                "dummy-jwt-token",
+                user.getRole(),
+                user.getEmail()
+        );
     }
 }

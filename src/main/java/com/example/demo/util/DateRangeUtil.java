@@ -1,20 +1,32 @@
 package com.example.demo.util;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DateRangeUtil {
 
-    public static List<LocalDate> daysBetween(LocalDate start, LocalDate end) {
-        if (start.isAfter(end)) {
-            return new ArrayList<>();
+    private DateRangeUtil() {
+        // Utility class – prevent instantiation
+    }
+
+    /**
+     * Checks whether two date ranges overlap.
+     *
+     * @param start1 start date of range 1
+     * @param end1   end date of range 1
+     * @param start2 start date of range 2
+     * @param end2   end date of range 2
+     * @return true if ranges overlap, false otherwise
+     */
+    public static boolean isOverlapping(
+            LocalDate start1,
+            LocalDate end1,
+            LocalDate start2,
+            LocalDate end2
+    ) {
+        if (start1 == null || end1 == null || start2 == null || end2 == null) {
+            return false;
         }
-        
-        return Stream.iterate(start, date -> date.plusDays(1))
-                     .limit(java.time.temporal.ChronoUnit.DAYS.between(start, end) + 1)
-                     .collect(Collectors.toList());
+
+        return !start1.isAfter(end2) && !start2.isAfter(end1);
     }
 }
