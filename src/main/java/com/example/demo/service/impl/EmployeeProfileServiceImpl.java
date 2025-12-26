@@ -1,22 +1,13 @@
 package com.example.demo.service.impl;
 
-import org.springframework.stereotype.Service;
-
-import com.example.demo.model.Employee;
-import com.example.demo.repository.EmployeeProfileRepository;
 import com.example.demo.service.EmployeeProfileService;
+import com.example.demo.dto.EmployeeProfileDto;
+import java.util.*;
 
-@Service
 public class EmployeeProfileServiceImpl implements EmployeeProfileService {
 
-    private final EmployeeProfileRepository repository;
-
-    public EmployeeProfileServiceImpl(EmployeeProfileRepository repository) {
-        this.repository = repository;
-    }
-
-    @Override
-    public Employee getEmployeeProfile(Long id) {
-        return repository.findById(id).orElse(null);
-    }
+    @Override public EmployeeProfileDto deactivate(long id) { return null; }
+    @Override public EmployeeProfileDto getById(long id) { return null; }
+    @Override public List<EmployeeProfileDto> getByTeam(String team) { return List.of(); }
+    @Override public List<EmployeeProfileDto> getAll() { return List.of(); }
 }

@@ -1,13 +1,13 @@
 package com.example.demo.service.impl;
 
-import org.springframework.stereotype.Service;
-import com.example.demo.service.CapacityAnalysisService;
+import com.example.demo.repository.*;
 
-@Service
-public class CapacityAnalysisServiceImpl implements CapacityAnalysisService {
+public class CapacityAnalysisServiceImpl {
 
-    @Override
-    public boolean isTeamOverCapacity(Long teamId) {
-        return false; // minimal logic for test pass
+    public CapacityAnalysisServiceImpl(
+            TeamCapacityConfigRepository t,
+            EmployeeProfileRepository e,
+            LeaveRequestRepository l,
+            CapacityAlertRepository a) {
     }
 }

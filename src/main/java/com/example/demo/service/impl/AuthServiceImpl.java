@@ -1,24 +1,20 @@
 package com.example.demo.service.impl;
 
-import org.springframework.stereotype.Service;
-
-import com.example.demo.dto.AuthRequestDto;
-import com.example.demo.dto.AuthResponseDto;
+import com.example.demo.dto.*;
+import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Service
 public class AuthServiceImpl implements AuthService {
 
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public AuthServiceImpl(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthServiceImpl(UserAccountRepository repo,
+                           BCryptPasswordEncoder encoder,
+                           JwtTokenProvider tokenProvider) {
     }
 
     @Override
-    public AuthResponseDto authenticate(AuthRequestDto request) {
-        String token = jwtTokenProvider.generateToken(request.getUsername());
-        return new AuthResponseDto(token);
+    public AuthResponse login(AuthRequest request) {
+        return new AuthResponse("dummy-token");
     }
 }

@@ -1,34 +1,21 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.repository.*;
+import com.example.demo.service.LeaveRequestService;
+import com.example.demo.dto.LeaveRequestDto;
+import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import com.example.demo.model.LeaveRequest;
-import com.example.demo.repository.LeaveRequestRepository;
-import com.example.demo.service.LeaveRequestService;
-
-@Service
 public class LeaveRequestServiceImpl implements LeaveRequestService {
 
-    private final LeaveRequestRepository leaveRequestRepository;
-
-    public LeaveRequestServiceImpl(LeaveRequestRepository leaveRequestRepository) {
-        this.leaveRequestRepository = leaveRequestRepository;
+    public LeaveRequestServiceImpl(
+            LeaveRequestRepository leaveRepo,
+            EmployeeProfileRepository empRepo) {
     }
 
-    @Override
-    public LeaveRequest applyLeave(LeaveRequest leaveRequest) {
-        return leaveRequestRepository.save(leaveRequest);
-    }
-
-    @Override
-    public LeaveRequest getLeaveById(Long id) {
-        return leaveRequestRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public List<LeaveRequest> getAllLeaves() {
-        return leaveRequestRepository.findAll();
-    }
+    @Override public LeaveRequestDto approve(long id) { return null; }
+    @Override public LeaveRequestDto reject(long id) { return null; }
+    @Override public List<LeaveRequestDto> getByEmployee(long empId) { return List.of(); }
+    @Override public List<LeaveRequestDto> getOverlappingForTeam(
+            String team, LocalDate start, LocalDate end) { return List.of(); }
 }
