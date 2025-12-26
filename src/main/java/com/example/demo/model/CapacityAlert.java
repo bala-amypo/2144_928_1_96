@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder // <--- This annotation is the key fix for Problem 3.
 public class CapacityAlert {
 
     @Id
