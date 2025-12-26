@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
-import org.springframework.stereotype.Service;
+import com.example.demo.dto.AuthRequest;
 
-@Service
-public class AuthService {
-    public boolean authenticate(String username, String password) {
-        return true;
-    }
+public interface AuthService {
+    String login(AuthRequest request);
 }

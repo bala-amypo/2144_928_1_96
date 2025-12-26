@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
-import org.springframework.stereotype.Service;
+import com.example.demo.dto.EmployeeProfileDto;
+import com.example.demo.model.EmployeeProfile;
+import java.util.List;
 
-@Service
-public class EmployeeProfileService {
-    public String getEmployeeName(Long id) {
-        return "Test Employee";
-    }
+public interface EmployeeProfileService {
+    EmployeeProfile create(EmployeeProfileDto dto);
+    EmployeeProfile update(long id, EmployeeProfileDto dto);
+    EmployeeProfile getById(long id);
+    void deactivate(long id);
+    List<EmployeeProfile> getAll();
 }
