@@ -1,13 +1,11 @@
 package com.example.demo.security;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.example.demo.model.UserAccount;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,60 +14,48 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtTokenProvider {
 
-    // MUST exist (reflection / config)
-    private String jwtSecret = "defaultSecretKeyMustBeAtLeast32CharsLong";
+    private final SecretKey secretKey;
+    private final long expirationMs;
 
-    private final long jwtExpirationMs = 86400000;
+    public JwtTokenProvider(
+            @Value("${app.jwt.secret}") String secret,
+            @Value("${app.jwt.expiration}") long expirationMs) {
 
-    public JwtTokenProvider() {
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+        this.expirationMs = expirationMs;
     }
 
-    // 🔑 Correct key type for JJWT 0.12.x
-    private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-    }
+    public String generateToken(String username) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expirationMs);
 
-    public String generateToken(UserAccount user) {
         return Jwts.builder()
-                .subject(user.getEmail())
-                .claim("userId", user.getId())
-                .claim("role", user.getRole())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSigningKey())
+                .subject(username)
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(secretKey)
                 .compact();
+    }
+
+    public String getUsernameFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)   // ✅ CORRECT for 0.12.3
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.getSubject();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .verifyWith(getSigningKey())
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token);
             return true;
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public String getEmail(String token) {
-        return getClaims(token).getSubject();
-    }
-
-    public String getRole(String token) {
-        return (String) getClaims(token).get("role");
-    }
-
-    public Long getUserId(String token) {
-        Object id = getClaims(token).get("userId");
-        return id == null ? null : Long.valueOf(id.toString());
-    }
-
-    private Claims getClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
     }
 }
