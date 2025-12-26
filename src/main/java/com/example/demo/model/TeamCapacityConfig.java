@@ -1,16 +1,41 @@
 package com.example.demo.model;
 
-public class TeamCapacityConfig {
+public class TeamCapacity {
+
     private Long id;
     private String teamName;
-    private int minimumCapacity;
+    private int totalMembers;
+    private int availableMembers;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getTeamName() { return teamName; }
-    public void setTeamName(String teamName) { this.teamName = teamName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public int getMinimumCapacity() { return minimumCapacity; }
-    public void setMinimumCapacity(int minimumCapacity) { this.minimumCapacity = minimumCapacity; }
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public int getTotalMembers() {
+        return totalMembers;
+    }
+
+    public void setTotalMembers(int totalMembers) {
+        this.totalMembers = totalMembers;
+    }
+
+    public int getAvailableMembers() {
+        return availableMembers;
+    }
+
+    public void setAvailableMembers(int availableMembers) {
+        this.availableMembers = availableMembers;
+    }
 }
