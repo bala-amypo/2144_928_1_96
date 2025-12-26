@@ -3,8 +3,11 @@ package com.example.demo.service.impl;
 import com.example.demo.model.LeaveRequest;
 import com.example.demo.repository.LeaveRequestRepository;
 import com.example.demo.service.LeaveRequestService;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     private final LeaveRequestRepository leaveRequestRepository;
@@ -20,7 +23,8 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     @Override
     public LeaveRequest getLeaveById(Long id) {
-        return leaveRequestRepository.findById(id).orElse(null);
+        return leaveRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Leave not found with id " + id));
     }
 
     @Override
