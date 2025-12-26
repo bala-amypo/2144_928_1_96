@@ -4,7 +4,6 @@ public class AuthResponseDto {
 
     private String token;
 
-    // ✅ Constructor name MUST match class name
     public AuthResponseDto(String token) {
         this.token = token;
     }
