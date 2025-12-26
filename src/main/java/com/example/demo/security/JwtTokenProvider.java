@@ -13,7 +13,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtTokenProvider {
 
-    // Tests inject this field via reflection
+    // MUST exist – tests set this via reflection
     private String jwtSecret = "defaultSecret";
 
     private final long jwtExpirationMs = 86400000;

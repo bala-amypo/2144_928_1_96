@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
-    public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) {
-        return null; // Not used in tests
+    public UserDetails loadUserByUsername(String username) {
+        return null; // Not required for tests
     }
 }
