@@ -1,6 +1,6 @@
 package com.example.demo.dto;
 
-public class AuthRequest {
+public class AuthRequestDto {
     public String email;
     public String password;
 }
