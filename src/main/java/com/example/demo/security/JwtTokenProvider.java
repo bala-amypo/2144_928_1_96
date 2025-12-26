@@ -6,13 +6,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    // ✅ MUST be SecretKey (not Key)
+    private final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
     private final long jwtExpirationMs = 24 * 60 * 60 * 1000; // 1 day
 
     // ✅ Generate Token
@@ -29,7 +31,7 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .verifyWith(key)
+                    .verifyWith(key)   // ✅ now matches SecretKey
                     .build()
                     .parseSignedClaims(token);
             return true;
@@ -38,7 +40,7 @@ public class JwtTokenProvider {
         }
     }
 
-    // ✅ Get Username from Token (JJWT 0.12.x)
+    // ✅ Extract Username
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(key)
