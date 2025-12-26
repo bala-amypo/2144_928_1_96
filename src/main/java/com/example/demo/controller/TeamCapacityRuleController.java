@@ -1,51 +1,43 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.entity.TeamCapacityConfig;
 import com.example.demo.service.TeamCapacityRuleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/team-capacity")
+@RequestMapping("/api/capacity-rules")
+@Tag(name = "Team Capacity Rules", description = "Team Capacity Configuration APIs")
 public class TeamCapacityRuleController {
-
-    private final TeamCapacityRuleService service;
-
-    public TeamCapacityRuleController(TeamCapacityRuleService service) {
-        this.service = service;
+    
+    private final TeamCapacityRuleService teamCapacityRuleService;
+    
+    public TeamCapacityRuleController(TeamCapacityRuleService teamCapacityRuleService) {
+        this.teamCapacityRuleService = teamCapacityRuleService;
     }
-
-    // CREATE
+    
     @PostMapping
-    public TeamCapacityConfig createRule(@RequestBody TeamCapacityConfig config) {
-        return service.createRule(config);
+    @Operation(summary = "Create a new team capacity rule")
+    public ResponseEntity<TeamCapacityConfig> createRule(@RequestBody TeamCapacityConfig rule) {
+        TeamCapacityConfig created = teamCapacityRuleService.createRule(rule);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
-
-    // UPDATE
+    
     @PutMapping("/{id}")
-    public TeamCapacityConfig updateRule(
-            @PathVariable Long id,
-            @RequestBody TeamCapacityConfig config) {
-        return service.updateRule(id, config);
+    @Operation(summary = "Update an existing team capacity rule")
+    public ResponseEntity<TeamCapacityConfig> updateRule(
+            @PathVariable Long id, @RequestBody TeamCapacityConfig rule) {
+        TeamCapacityConfig updated = teamCapacityRuleService.updateRule(id, rule);
+        return ResponseEntity.ok(updated);
     }
-
-    // GET BY TEAM
-    @GetMapping("/{teamName}")
-    public TeamCapacityConfig getByTeam(@PathVariable String teamName) {
-        return service.getRuleByTeam(teamName);
-    }
-
-    // GET ALL
-    @GetMapping
-    public List<TeamCapacityConfig> getAll() {
-        return service.getAllRules();
-    }
-
-    // DELETE
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.deleteRule(id);
+    
+    @GetMapping("/team/{teamName}")
+    @Operation(summary = "Get capacity rule by team name")
+    public ResponseEntity<TeamCapacityConfig> getRuleByTeam(@PathVariable String teamName) {
+        TeamCapacityConfig rule = teamCapacityRuleService.getRuleByTeam(teamName);
+        return ResponseEntity.ok(rule);
     }
 }
