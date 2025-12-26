@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.LeaveRequestDto;
-import com.example.demo.model.LeaveRequest;
 import com.example.demo.service.LeaveRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,7 +37,8 @@ public class LeaveRequestController {
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<LeaveRequestDto>> getLeavesByEmployee(@PathVariable Long employeeId) {
+    public ResponseEntity<List<LeaveRequestDto>> getLeavesByEmployee(@PathVariable String employeeId) {
+        // FIX: Changed @PathVariable type from Long to String to match the service and models
         List<LeaveRequestDto> dtoList = leaveRequestService.getByEmployee(employeeId);
         return ResponseEntity.ok(dtoList);
     }
