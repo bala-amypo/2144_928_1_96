@@ -1,50 +1,49 @@
 package com.example.demo.security;
 
+import com.example.demo.model.UserAccount;
+import com.example.demo.repository.UserAccountRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor; // This import needs Lombok
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Compiler error fix (requires Lombok)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
+    private final UserAccountRepository userRepo;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        try {
+            String jwt = getJwtFromRequest(request);
 
-        String jwt = getJwtFromRequest(request);
+            if (jwt != null && tokenProvider.validateToken(jwt)) {
+                String email = tokenProvider.getEmail(jwt);
+                UserAccount user = userRepo.findByEmail(email).orElse(null);
 
-        if (jwt != null && tokenProvider.validateToken(jwt)) {
-            String email = tokenProvider.getEmail(jwt);
-            String role = tokenProvider.getRole(jwt);
-            
-            // Create authentication object
-            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
-            UserDetails userDetails = new User(email, "", authorities);
-
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            // Set in security context
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (user != null) {
+                    // This is a minimal authentication setup for the user's role/email
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            user, null, Collections.emptyList()); 
+                    
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
+        } catch (Exception ex) {
+            logger.error("Could not set user authentication in security context", ex);
         }
 
         filterChain.doFilter(request, response);
