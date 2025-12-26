@@ -9,22 +9,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long> {
-
+    
+    // STEP 0.4: Required method for Get Leaves by Employee
     List<LeaveRequest> findByEmployee(EmployeeProfile employee);
 
-    @Query("SELECT lr FROM LeaveRequest lr " +
-           "JOIN lr.employee ep " +
-           "WHERE ep.teamName = :teamName " +
-           "AND lr.status = 'APPROVED' " +
-           "AND lr.startDate <= :end AND lr.endDate >= :start")
+    // STEP 0.4: Required method for Get Overlapping Leaves
+    @Query("SELECT l FROM LeaveRequest l JOIN l.employee e " +
+           "WHERE e.teamName = :teamName AND l.status = 'APPROVED' AND " +
+           "l.startDate <= :endDate AND l.endDate >= :startDate")
     List<LeaveRequest> findApprovedOverlappingForTeam(
             @Param("teamName") String teamName,
-            @Param("start") LocalDate start,
-            @Param("end") LocalDate end);
-
-    @Query("SELECT lr FROM LeaveRequest lr " +
-           "WHERE lr.status = 'APPROVED' " +
-           "AND :date BETWEEN lr.startDate AND lr.endDate " +
-           "AND lr.employee.active = true")
-    List<LeaveRequest> findApprovedOnDate(@Param("date") LocalDate date);
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 }

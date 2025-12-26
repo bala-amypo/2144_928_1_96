@@ -1,35 +1,38 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Table(name = "leave_request")
 public class LeaveRequest {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // Long, PK
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private EmployeeProfile employee;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_profile_id", nullable = false)
+    private EmployeeProfile employee; // Many-to-One EmployeeProfile
 
     private LocalDate startDate;
-
     private LocalDate endDate;
-
-    private String type; // ANNUAL, SICK, etc.
-
-    @Column(columnDefinition = "VARCHAR(255) default 'PENDING'")
-    private String status; // PENDING, APPROVED, REJECTED
-
+    private String type;
+    private String status; // PENDING / APPROVED / REJECTED
     private String reason;
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public EmployeeProfile getEmployee() { return employee; }
+    public void setEmployee(EmployeeProfile employee) { this.employee = employee; }
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public LocalDate getEndDate() { return endDate; }
+    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
 }

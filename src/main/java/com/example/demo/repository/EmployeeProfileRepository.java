@@ -3,10 +3,9 @@ package com.example.demo.repository;
 import com.example.demo.model.EmployeeProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
-import java.util.Optional;
 
 public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile, Long> {
+    
+    // STEP 0.4: Required method for Get Employees By Team
     List<EmployeeProfile> findByTeamNameAndActiveTrue(String teamName);
-    Optional<EmployeeProfile> findByEmployeeId(String employeeId);
-    Optional<EmployeeProfile> findByEmail(String email);
 }

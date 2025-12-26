@@ -1,42 +1,29 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Table(name = "employee_profile")
 public class EmployeeProfile {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // Long, PK, Auto-Generated
 
     @Column(unique = true, nullable = false)
-    private String employeeId;
+    private String employeeId; // employeeId (String, unique)
 
     private String fullName;
-
+    
     @Column(unique = true, nullable = false)
-    private String email;
-
+    private String email; // email (String, unique)
+    
     private String teamName;
-
     private String role;
-
-    @Column(columnDefinition = "boolean default true")
-    private Boolean active = true;
-
-    private LocalDateTime createdAt = LocalDateTime.now();
+    
+    private boolean active = true; // active (Boolean, default to true)
+    private LocalDateTime createdAt = LocalDateTime.now(); // createdAt (LocalDateTime)
 
     @ManyToMany
     @JoinTable(
@@ -44,11 +31,22 @@ public class EmployeeProfile {
         joinColumns = @JoinColumn(name = "employee_id"),
         inverseJoinColumns = @JoinColumn(name = "colleague_id")
     )
-    @JsonIgnore
-    private Set<EmployeeProfile> colleagues = new HashSet<>();
-    
-    // Explicit getter for 'active' to resolve 'isActive()' symbol issue in test code
-    public boolean isActive() {
-        return this.active != null && this.active;
-    }
+    private Set<EmployeeProfile> colleagues; // Many-to-Many self-relationship
+
+    // Getters and Setters (Only including those needed by the tests)
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getEmployeeId() { return employeeId; }
+    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getTeamName() { return teamName; }
+    public void setTeamName(String teamName) { this.teamName = teamName; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
+    // ... other getters/setters for JPA/Hibernate
 }
