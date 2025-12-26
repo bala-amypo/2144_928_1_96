@@ -2,54 +2,43 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.LeaveRequestDto;
 import com.example.demo.service.LeaveRequestService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/leaves")
-@RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Leave Requests", description = "Operations for leave applications")
 public class LeaveRequestController {
+    
+    private final LeaveRequestService leaveService;
 
-    private final LeaveRequestService leaveRequestService;
+    public LeaveRequestController(LeaveRequestService leaveService) {
+        this.leaveService = leaveService;
+    }
 
     @PostMapping
-    public ResponseEntity<LeaveRequestDto> submitLeave(@RequestBody LeaveRequestDto dto) {
-        LeaveRequestDto createdDto = leaveRequestService.create(dto);
-        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
+    public ResponseEntity<LeaveRequestDto> createLeave(@RequestBody LeaveRequestDto dto) {
+        LeaveRequestDto created = leaveService.create(dto);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/approve")
     public ResponseEntity<LeaveRequestDto> approveLeave(@PathVariable Long id) {
-        LeaveRequestDto updatedDto = leaveRequestService.approve(id);
-        return ResponseEntity.ok(updatedDto);
+        return ResponseEntity.ok(leaveService.approve(id));
     }
 
     @PutMapping("/{id}/reject")
     public ResponseEntity<LeaveRequestDto> rejectLeave(@PathVariable Long id) {
-        LeaveRequestDto updatedDto = leaveRequestService.reject(id);
-        return ResponseEntity.ok(updatedDto);
+        return ResponseEntity.ok(leaveService.reject(id));
     }
-
+    
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<LeaveRequestDto>> getLeavesByEmployee(@PathVariable String employeeId) {
-        // FIX: Changed @PathVariable type from Long to String to match the service and models
-        List<LeaveRequestDto> dtoList = leaveRequestService.getByEmployee(employeeId);
-        return ResponseEntity.ok(dtoList);
-    }
-
-    @GetMapping("/team-overlap")
-    public ResponseEntity<List<LeaveRequestDto>> getOverlappingLeavesForTeam(
-            @RequestParam String teamName,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
-        
-        List<LeaveRequestDto> dtoList = leaveRequestService.getOverlappingForTeam(teamName, start, end);
-        return ResponseEntity.ok(dtoList);
+    public ResponseEntity<List<LeaveRequestDto>> getLeavesByEmployee(@PathVariable Long employeeId) {
+        return ResponseEntity.ok(leaveService.getByEmployee(employeeId));
     }
 }

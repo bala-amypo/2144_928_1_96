@@ -30,7 +30,6 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
         return dto;
     }
     
-    // STEP 4.1: create
     @Override
     public EmployeeProfileDto create(EmployeeProfileDto dto) {
         EmployeeProfile emp = new EmployeeProfile();
@@ -39,28 +38,24 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
         emp.setEmail(dto.getEmail());
         emp.setTeamName(dto.getTeamName());
         emp.setRole(dto.getRole());
-        emp.setActive(true); // Default
+        emp.setActive(true);
         EmployeeProfile saved = employeeRepo.save(emp);
         return convertToDto(saved);
     }
 
-    // STEP 4.1: update
     @Override
     public EmployeeProfileDto update(Long id, EmployeeProfileDto dto) {
         EmployeeProfile existing = employeeRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found for id: " + id));
 
-        // Update fields based on DTO
         if (dto.getFullName() != null) existing.setFullName(dto.getFullName());
         if (dto.getTeamName() != null) existing.setTeamName(dto.getTeamName());
         if (dto.getRole() != null) existing.setRole(dto.getRole());
-        // Note: employeeId and email are typically immutable after creation
 
         EmployeeProfile updated = employeeRepo.save(existing);
         return convertToDto(updated);
     }
 
-    // STEP 4.1: deactivate
     @Override
     public void deactivate(Long id) {
         EmployeeProfile existing = employeeRepo.findById(id)
@@ -69,7 +64,6 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
         employeeRepo.save(existing);
     }
 
-    // STEP 4.1: getById
     @Override
     public EmployeeProfileDto getById(Long id) {
         EmployeeProfile emp = employeeRepo.findById(id)
@@ -77,7 +71,6 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
         return convertToDto(emp);
     }
 
-    // STEP 4.1: getByTeam (uses findByTeamNameAndActiveTrue)
     @Override
     public List<EmployeeProfileDto> getByTeam(String teamName) {
         return employeeRepo.findByTeamNameAndActiveTrue(teamName).stream()
@@ -85,7 +78,6 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
                 .collect(Collectors.toList());
     }
 
-    // STEP 4.1: getAll
     @Override
     public List<EmployeeProfileDto> getAll() {
         return employeeRepo.findAll().stream()

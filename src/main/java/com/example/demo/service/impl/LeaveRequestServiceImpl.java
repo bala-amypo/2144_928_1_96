@@ -37,7 +37,6 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         return dto;
     }
     
-    // STEP 4.2: create
     @Override
     public LeaveRequestDto create(LeaveRequestDto dto) {
         EmployeeProfile emp = employeeRepo.findById(dto.getEmployeeId())
@@ -53,13 +52,12 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         leave.setEndDate(dto.getEndDate());
         leave.setType(dto.getType());
         leave.setReason(dto.getReason());
-        leave.setStatus("PENDING"); // Default status
+        leave.setStatus("PENDING");
 
         LeaveRequest saved = leaveRepo.save(leave);
         return convertToDto(saved);
     }
 
-    // STEP 4.2: approve
     @Override
     public LeaveRequestDto approve(Long id) {
         LeaveRequest leave = leaveRepo.findById(id)
@@ -69,7 +67,6 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         return convertToDto(updated);
     }
 
-    // STEP 4.2: reject
     @Override
     public LeaveRequestDto reject(Long id) {
         LeaveRequest leave = leaveRepo.findById(id)
@@ -79,7 +76,6 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         return convertToDto(updated);
     }
 
-    // STEP 4.2: getByEmployee
     @Override
     public List<LeaveRequestDto> getByEmployee(Long employeeId) {
         EmployeeProfile emp = employeeRepo.findById(employeeId)
@@ -90,10 +86,8 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
                 .collect(Collectors.toList());
     }
 
-    // STEP 4.2: getOverlappingForTeam (uses custom JPA method)
     @Override
     public List<LeaveRequestDto> getOverlappingForTeam(String teamName, LocalDate start, LocalDate end) {
-        // Validation check for dates (same as create, although repository will handle actual overlap logic)
         if (start.isAfter(end)) {
             throw new BadRequestException("Invalid Date Range: Start date must be before or equal to end date.");
         }

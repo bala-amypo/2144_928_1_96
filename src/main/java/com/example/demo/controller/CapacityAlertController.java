@@ -1,42 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.CapacityAnalysisResultDto;
-import com.example.demo.model.CapacityAlert;
-import com.example.demo.repository.CapacityAlertRepository;
-import com.example.demo.service.CapacityAnalysisService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/capacity-alerts")
-@RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Capacity Alerts", description = "View generated capacity alerts")
 public class CapacityAlertController {
-
-    private final CapacityAnalysisService analysisService;
-    private final CapacityAlertRepository capacityAlertRepository;
-
-    @PostMapping("/analyze")
-    public ResponseEntity<CapacityAnalysisResultDto> analyzeTeamCapacity(
-            @RequestParam String teamName,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
-        
-        CapacityAnalysisResultDto result = analysisService.analyzeTeamCapacity(teamName, start, end);
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping("/team/{teamName}")
-    public ResponseEntity<List<CapacityAlert>> getAlertsByTeamAndDateRange(
-            @PathVariable String teamName,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
-        
-        List<CapacityAlert> alerts = capacityAlertRepository.findByTeamNameAndDateBetween(teamName, start, end);
-        return ResponseEntity.ok(alerts);
-    }
+    // Controller placeholder
 }

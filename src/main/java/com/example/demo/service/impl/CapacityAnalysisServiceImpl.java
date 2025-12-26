@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class CapacityAnalysisServiceImpl implements CapacityAnalysisService {
@@ -34,29 +33,24 @@ public class CapacityAnalysisServiceImpl implements CapacityAnalysisService {
         this.alertRepo = alertRepo;
     }
 
-    // Placeholder implementation to satisfy the test setup, as the test for this service is not fully provided in the extract.
-    // The actual logic would perform the capacity calculation.
     @Override
     public CapacityAnalysisResultDto analyzeTeamCapacity(String teamName, LocalDate start, LocalDate end) {
-        // --- 1. Get Config ---
         TeamCapacityConfig config = configRepo.findByTeamName(teamName).orElse(null);
+        
+        CapacityAnalysisResultDto result = new CapacityAnalysisResultDto();
+        result.setRisky(false);
+        result.setCapacityByDate(new HashMap<>());
+        
         if (config == null) {
-            // Placeholder: In a real app, this should throw an exception.
-            // For now, return a placeholder result.
-            CapacityAnalysisResultDto dto = new CapacityAnalysisResultDto();
-            dto.setRisky(false);
-            dto.setCapacityByDate(new HashMap<>());
-            return dto;
+            return result; 
         }
 
-        // --- 2. Get Total Headcount ---
         List<EmployeeProfile> employees = employeeRepo.findByTeamNameAndActiveTrue(teamName);
         int totalHeadcount = employees.size();
+        if (totalHeadcount == 0) return result; 
 
-        // --- 3. Get Approved Leaves (Overlapping) ---
         List<LeaveRequest> leaves = leaveRepo.findApprovedOverlappingForTeam(teamName, start, end);
         
-        // --- 4. Calculate Capacity by Day ---
         Map<LocalDate, Double> capacityByDate = new HashMap<>();
         boolean overallRisky = false;
 
@@ -68,22 +62,21 @@ public class CapacityAnalysisServiceImpl implements CapacityAnalysisService {
                 .count();
 
             double availableCapacity = (double) (totalHeadcount - employeesOnLeave) / totalHeadcount;
-            capacityByDate.put(date, availableCapacity * 100.0);
+            double capacityPercent = availableCapacity * 100.0;
+            capacityByDate.put(date, capacityPercent);
             
-            // Check for risk based on minCapacityPercent
-            if (availableCapacity * 100.0 < config.getMinCapacityPercent()) {
+            if (capacityPercent < config.getMinCapacityPercent()) {
                 overallRisky = true;
-                // --- 5. Create Alert (if needed) ---
+                // Create Alert
                 CapacityAlert alert = new CapacityAlert();
                 alert.setTeamName(teamName);
                 alert.setDate(date);
-                alert.setSeverity("HIGH"); // Simplified severity
-                alert.setMessage(String.format("Capacity dropped to %.1f%% on %s.", availableCapacity * 100.0, date));
+                alert.setSeverity("HIGH"); 
+                alert.setMessage(String.format("Capacity dropped to %.1f%% on %s.", capacityPercent, date));
                 alertRepo.save(alert);
             }
         }
 
-        CapacityAnalysisResultDto result = new CapacityAnalysisResultDto();
         result.setRisky(overallRisky);
         result.setCapacityByDate(capacityByDate);
         return result;

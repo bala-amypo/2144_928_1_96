@@ -17,7 +17,7 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
 
-    // STEP 0.2: Specific Constructor Requirement for Dependency Injection
+    // Specific constructor required by TestNG setup
     public AuthServiceImpl(UserAccountRepository userRepo, BCryptPasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
@@ -36,6 +36,4 @@ public class AuthServiceImpl implements AuthService {
         String token = tokenProvider.generateToken(user);
         return new AuthResponse(token, user.getRole());
     }
-
-    // Other required AuthService methods (e.g., register) would go here
 }
