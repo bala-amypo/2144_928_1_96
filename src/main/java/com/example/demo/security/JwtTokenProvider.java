@@ -16,11 +16,11 @@ import java.util.Map;
 @Component
 public class JwtTokenProvider {
 
-    // This field name 'jwtSecret' is specifically targeted by the TestNG test setup via reflection.
+    // Field name must be 'jwtSecret' for TestNG setup
     @Value("${app.jwtSecret:default-test-secret-change-this-secret-key-change}")
     private String jwtSecret;
 
-    @Value("${app.jwtExpirationInMs:3600000}") // 1 hour
+    @Value("${app.jwtExpirationInMs:3600000}")
     private int jwtExpirationInMs;
     
     private Key key;
@@ -31,7 +31,6 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    // Required for TestNG setup - generateToken
     public String generateToken(UserAccount user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole());
@@ -41,7 +40,7 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(user.getEmail()) // Used for getEmail
+                .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .addClaims(claims)
@@ -49,19 +48,16 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // Required for TestNG setup - getEmail (uses subject)
     public String getEmail(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
 
-    // Required for TestNG setup - getRole
     public String getRole(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return (String) claims.get("role");
     }
 
-    // Required for TestNG setup - getUserId
     public Long getUserId(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         Object userId = claims.get("userId");
@@ -71,13 +67,11 @@ public class JwtTokenProvider {
         return (Long) userId;
     }
 
-    // Required for TestNG setup - validateToken
     public boolean validateToken(String authToken) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authToken);
             return true;
         } catch (Exception ex) {
-            // Handle exceptions like ExpiredJwtException, UnsupportedJwtException, etc.
             return false;
         }
     }

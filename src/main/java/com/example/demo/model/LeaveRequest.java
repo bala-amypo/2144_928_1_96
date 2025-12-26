@@ -8,16 +8,16 @@ import java.time.LocalDate;
 public class LeaveRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Long, PK
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_profile_id", nullable = false)
-    private EmployeeProfile employee; // Many-to-One EmployeeProfile
+    private EmployeeProfile employee;
 
     private LocalDate startDate;
     private LocalDate endDate;
     private String type;
-    private String status; // PENDING / APPROVED / REJECTED
+    private String status;
     private String reason;
 
     // Getters and Setters

@@ -5,7 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile, Long> {
-    
-    // STEP 0.4: Required method for Get Employees By Team
     List<EmployeeProfile> findByTeamNameAndActiveTrue(String teamName);
 }

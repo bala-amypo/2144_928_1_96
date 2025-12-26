@@ -10,10 +10,8 @@ import java.util.List;
 
 public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long> {
     
-    // STEP 0.4: Required method for Get Leaves by Employee
     List<LeaveRequest> findByEmployee(EmployeeProfile employee);
 
-    // STEP 0.4: Required method for Get Overlapping Leaves
     @Query("SELECT l FROM LeaveRequest l JOIN l.employee e " +
            "WHERE e.teamName = :teamName AND l.status = 'APPROVED' AND " +
            "l.startDate <= :endDate AND l.endDate >= :startDate")

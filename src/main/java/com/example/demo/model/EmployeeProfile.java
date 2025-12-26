@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -9,21 +8,20 @@ import java.util.Set;
 public class EmployeeProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Long, PK, Auto-Generated
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    private String employeeId; // employeeId (String, unique)
+    private String employeeId;
 
     private String fullName;
     
     @Column(unique = true, nullable = false)
-    private String email; // email (String, unique)
+    private String email;
     
     private String teamName;
     private String role;
     
-    private boolean active = true; // active (Boolean, default to true)
-    private LocalDateTime createdAt = LocalDateTime.now(); // createdAt (LocalDateTime)
+    private boolean active = true;
 
     @ManyToMany
     @JoinTable(
@@ -31,9 +29,9 @@ public class EmployeeProfile {
         joinColumns = @JoinColumn(name = "employee_id"),
         inverseJoinColumns = @JoinColumn(name = "colleague_id")
     )
-    private Set<EmployeeProfile> colleagues; // Many-to-Many self-relationship
+    private Set<EmployeeProfile> colleagues;
 
-    // Getters and Setters (Only including those needed by the tests)
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getEmployeeId() { return employeeId; }
@@ -48,5 +46,6 @@ public class EmployeeProfile {
     public void setRole(String role) { this.role = role; }
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
-    // ... other getters/setters for JPA/Hibernate
+    public Set<EmployeeProfile> getColleagues() { return colleagues; }
+    public void setColleagues(Set<EmployeeProfile> colleagues) { this.colleagues = colleagues; }
 }
