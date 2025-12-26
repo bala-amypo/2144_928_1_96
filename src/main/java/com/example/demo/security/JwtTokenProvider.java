@@ -12,41 +12,39 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    // Secure HS256 key
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final long jwtExpirationMs = 24 * 60 * 60 * 1000; // 1 day
 
-    private final long jwtExpirationMs = 24 * 60 * 60 * 1000;
-
-    // ✅ Generate JWT
+    // ✅ Generate Token
     public String generateToken(String username) {
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key)
                 .compact();
     }
 
-    // ✅ Validate JWT
+    // ✅ Validate Token (JJWT 0.12.x)
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
+            Jwts.parser()
+                    .verifyWith(key)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseSignedClaims(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    // ✅ Extract username from JWT
+    // ✅ Get Username from Token (JJWT 0.12.x)
     public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
+        Claims claims = Jwts.parser()
+                .verifyWith(key)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
 
         return claims.getSubject();
     }
