@@ -1,7 +1,5 @@
 package com.example.demo.security;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
@@ -11,19 +9,15 @@ import com.example.demo.model.UserAccount;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 @Component
+@SuppressWarnings("deprecation")
 public class JwtTokenProvider {
 
-    // MUST exist for tests (reflection sets this)
-    private String jwtSecret = "defaultSecretKey12345678901234567890";
+    // MUST exist – tests set this via reflection
+    private String jwtSecret = "defaultSecret";
 
     private final long jwtExpirationMs = 86400000;
-
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-    }
 
     public JwtTokenProvider() {
     }
@@ -35,15 +29,14 @@ public class JwtTokenProvider {
                 .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
+            Jwts.parser()
+                    .setSigningKey(jwtSecret)
                     .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
@@ -65,9 +58,8 @@ public class JwtTokenProvider {
     }
 
     private Claims getClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody();
     }
