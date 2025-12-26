@@ -1,14 +1,63 @@
 package com.example.demo.dto;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 public class CapacityAnalysisResultDto {
-    private boolean risky;
-    private Map<LocalDate, Double> capacityByDate;
 
-    public boolean isRisky() { return risky; }
-    public void setRisky(boolean risky) { this.risky = risky; }
-    public Map<LocalDate, Double> getCapacityByDate() { return capacityByDate; }
-    public void setCapacityByDate(Map<LocalDate, Double> capacityByDate) { this.capacityByDate = capacityByDate; }
+    private String teamName;
+    private LocalDate date;
+    private int totalEmployees;
+    private int employeesOnLeave;
+    private int availableEmployees;
+    private boolean capacityBreached;
+
+    public CapacityAnalysisResultDto() {}
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public int getTotalEmployees() {
+        return totalEmployees;
+    }
+
+    public int getEmployeesOnLeave() {
+        return employeesOnLeave;
+    }
+
+    public int getAvailableEmployees() {
+        return availableEmployees;
+    }
+
+    public boolean isCapacityBreached() {
+        return capacityBreached;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setTotalEmployees(int totalEmployees) {
+        this.totalEmployees = totalEmployees;
+    }
+
+    public void setEmployeesOnLeave(int employeesOnLeave) {
+        this.employeesOnLeave = employeesOnLeave;
+    }
+
+    public void setAvailableEmployees(int availableEmployees) {
+        this.availableEmployees = availableEmployees;
+    }
+
+    public void setCapacityBreached(boolean capacityBreached) {
+        this.capacityBreached = capacityBreached;
+    }
 }
