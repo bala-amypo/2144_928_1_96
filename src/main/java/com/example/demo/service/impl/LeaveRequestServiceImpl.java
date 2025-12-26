@@ -74,8 +74,10 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
     }
 
     @Override
-    public List<LeaveRequestDto> getByEmployee(Long employeeId) {
-        EmployeeProfile employee = employeeProfileRepository.findById(employeeId)
+    // FIX: Changed signature to accept String employeeId
+    public List<LeaveRequestDto> getByEmployee(String employeeId) {
+        // FIX: Changed lookup method from findById (primary key) to findByEmployeeId (business ID)
+        EmployeeProfile employee = employeeProfileRepository.findByEmployeeId(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employeeId));
 
         return leaveRequestRepository.findByEmployee(employee).stream()
@@ -85,6 +87,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     @Override
     public List<LeaveRequestDto> getOverlappingForTeam(String teamName, LocalDate start, LocalDate end) {
+        // Assuming findApprovedOverlappingForTeam is a custom repository method that handles the filtering
         return leaveRequestRepository.findApprovedOverlappingForTeam(teamName, start, end).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
