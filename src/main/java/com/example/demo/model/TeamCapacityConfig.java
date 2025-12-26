@@ -1,19 +1,16 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
-
-@Entity
 public class TeamCapacityConfig {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private int maxCapacity;
+    private String teamName;
+    private int minimumCapacity;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public int getMaxCapacity() { return maxCapacity; }
-    public void setMaxCapacity(int maxCapacity) { this.maxCapacity = maxCapacity; }
+    public String getTeamName() { return teamName; }
+    public void setTeamName(String teamName) { this.teamName = teamName; }
+
+    public int getMinimumCapacity() { return minimumCapacity; }
+    public void setMinimumCapacity(int minimumCapacity) { this.minimumCapacity = minimumCapacity; }
 }
