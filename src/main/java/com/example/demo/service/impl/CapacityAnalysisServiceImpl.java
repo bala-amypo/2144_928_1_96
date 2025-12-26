@@ -2,14 +2,16 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.CapacityAnalysisResultDto;
 import com.example.demo.model.CapacityAlert;
-import com.example.demo.model.EmployeeProfile;
 import com.example.demo.model.LeaveRequest;
 import com.example.demo.model.TeamCapacityConfig;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.*;
+import com.example.demo.repository.CapacityAlertRepository;
+import com.example.demo.repository.LeaveRequestRepository;
+import com.example.demo.repository.TeamCapacityConfigRepository;
 import com.example.demo.service.CapacityAnalysisService;
 import com.example.demo.util.DateRangeUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,88 +19,73 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class CapacityAnalysisServiceImpl implements CapacityAnalysisService {
-    
+
     private final TeamCapacityConfigRepository teamCapacityConfigRepository;
-    private final EmployeeProfileRepository employeeProfileRepository;
     private final LeaveRequestRepository leaveRequestRepository;
     private final CapacityAlertRepository capacityAlertRepository;
-    
-    public CapacityAnalysisServiceImpl(TeamCapacityConfigRepository teamCapacityConfigRepository,
-                                      EmployeeProfileRepository employeeProfileRepository,
-                                      LeaveRequestRepository leaveRequestRepository,
-                                      CapacityAlertRepository capacityAlertRepository) {
-        this.teamCapacityConfigRepository = teamCapacityConfigRepository;
-        this.employeeProfileRepository = employeeProfileRepository;
-        this.leaveRequestRepository = leaveRequestRepository;
-        this.capacityAlertRepository = capacityAlertRepository;
-    }
-    
+
     @Override
+    @Transactional
     public CapacityAnalysisResultDto analyzeTeamCapacity(String teamName, LocalDate start, LocalDate end) {
-        // Validate date range
-        if (start.isAfter(end)) {
-            throw new BadRequestException("Start date must be on or before end date");
+        // 1. Validation: Date Range (start <= end and start is not in the past)
+        if (start.isAfter(end) || start.isBefore(LocalDate.now())) {
+            throw new BadRequestException("Invalid Date Range: Start date or future validation failed.");
         }
-        
-        // Get team capacity config
-        TeamCapacityConfig config = teamCapacityConfigRepository.findByTeamName(teamName)
-            .orElseThrow(() -> new ResourceNotFoundException("Capacity config not found for team: " + teamName));
-        
-        // Validate headcount
-        if (config.getTotalHeadcount() <= 0) {
-            throw new BadRequestException("Invalid total headcount. Must be greater than 0");
+
+        // 2. Load Config
+        TeamCapacityConfig rule = teamCapacityConfigRepository.findByTeamName(teamName)
+            .orElseThrow(() -> new ResourceNotFoundException("Missing Config: Capacity config not found."));
+
+        // 3. Validation: Headcount
+        if (rule.getTotalHeadcount() <= 0) {
+            throw new BadRequestException("Invalid Headcount: Invalid total headcount.");
         }
-        
-        // Get active employees in team
-        List<EmployeeProfile> activeEmployees = employeeProfileRepository.findByTeamNameAndActiveTrue(teamName);
-        int activeHeadcount = activeEmployees.size();
-        
-        // Get overlapping approved leaves
-        List<LeaveRequest> overlappingLeaves = leaveRequestRepository
-            .findApprovedOverlappingForTeam(teamName, start, end);
-        
-        // Calculate capacity for each day
+
+        int headcount = rule.getTotalHeadcount();
+        double minCapacity = rule.getMinCapacityPercent();
+        List<LocalDate> days = DateRangeUtil.daysBetween(start, end);
         Map<LocalDate, Double> capacityByDate = new HashMap<>();
         boolean risky = false;
         
-        List<LocalDate> dates = DateRangeUtil.daysBetween(start, end);
-        
-        for (LocalDate date : dates) {
-            // Count employees on leave on this date
-            long onLeaveCount = overlappingLeaves.stream()
-                .filter(leave -> !date.isBefore(leave.getStartDate()) && 
-                                !date.isAfter(leave.getEndDate()))
+        for (LocalDate date : days) {
+            // Find all approved leaves for active employees on this specific date
+            List<LeaveRequest> approvedLeaves = leaveRequestRepository.findApprovedOnDate(date);
+            
+            // Filter down to the target team
+            long leavesOnLeave = approvedLeaves.stream()
+                .filter(lr -> lr.getEmployee().getTeamName().equals(teamName))
                 .count();
-            
-            // Calculate available employees
-            long availableCount = activeHeadcount - onLeaveCount;
-            
-            // Calculate capacity percentage
-            double capacityPercent = (activeHeadcount > 0) ? 
-                (availableCount * 100.0) / activeHeadcount : 0.0;
+
+            double remainingCapacity = (double) (headcount - leavesOnLeave);
+            double capacityPercent = (remainingCapacity / headcount) * 100.0;
             
             capacityByDate.put(date, capacityPercent);
-            
-            // Check if below minimum capacity
-            if (capacityPercent < config.getMinCapacityPercent()) {
+
+            if (capacityPercent < minCapacity) {
                 risky = true;
+                String message = String.format("Capacity dropped to %.2f%%. %d/%d available.",
+                    capacityPercent, (int)remainingCapacity, headcount);
                 
-                // Create capacity alert
-                String severity = (capacityPercent < 50) ? "HIGH" : "MEDIUM";
-                String message = String.format(
-                    "Team '%s' capacity dropped to %.1f%% on %s (minimum required: %d%%)",
-                    teamName, capacityPercent, date, config.getMinCapacityPercent()
-                );
+                // Create and save CapacityAlert
+                CapacityAlert alert = CapacityAlert.builder()
+                    .teamName(teamName)
+                    .date(date)
+                    .severity("HIGH")
+                    .message(message)
+                    .build();
                 
-                CapacityAlert alert = new CapacityAlert(teamName, date, severity, message);
                 capacityAlertRepository.save(alert);
             }
         }
-        
-        return new CapacityAnalysisResultDto(risky, capacityByDate);
+
+        return CapacityAnalysisResultDto.builder()
+            .risky(risky)
+            .capacityByDate(capacityByDate)
+            .build();
     }
 }

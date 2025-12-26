@@ -8,6 +8,7 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.EmployeeProfileRepository;
 import com.example.demo.repository.LeaveRequestRepository;
 import com.example.demo.service.LeaveRequestService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,97 +17,88 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class LeaveRequestServiceImpl implements LeaveRequestService {
-    
+
     private final LeaveRequestRepository leaveRequestRepository;
     private final EmployeeProfileRepository employeeProfileRepository;
-    
-    public LeaveRequestServiceImpl(LeaveRequestRepository leaveRequestRepository,
-                                  EmployeeProfileRepository employeeProfileRepository) {
-        this.leaveRequestRepository = leaveRequestRepository;
-        this.employeeProfileRepository = employeeProfileRepository;
-    }
-    
+
     @Override
+    @Transactional
     public LeaveRequestDto create(LeaveRequestDto dto) {
+        // 1. Validate employee
+        EmployeeProfile employee = employeeProfileRepository.findByEmployeeId(dto.getEmployeeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + dto.getEmployeeId()));
+
+        // 2. Validate date range: startDate after endDate
         if (dto.getStartDate().isAfter(dto.getEndDate())) {
-            throw new BadRequestException("Start date must be on or before end date");
+            throw new BadRequestException("Invalid Date Range: Start date after end date.");
         }
         
-        EmployeeProfile employee = employeeProfileRepository.findById(dto.getEmployeeId())
-            .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + dto.getEmployeeId()));
-        
-        if (!employee.getActive()) {
-            throw new BadRequestException("Cannot submit leave for inactive employee");
+        // 3. Validation rule: Start date cannot be in the past
+        if (dto.getStartDate().isBefore(LocalDate.now())) {
+            throw new BadRequestException("Invalid Date Range: Start date or future validation failed.");
         }
-        
-        LeaveRequest leaveRequest = new LeaveRequest();
-        leaveRequest.setEmployee(employee);
-        leaveRequest.setStartDate(dto.getStartDate());
-        leaveRequest.setEndDate(dto.getEndDate());
-        leaveRequest.setType(dto.getType());
-        leaveRequest.setStatus("PENDING");
-        leaveRequest.setReason(dto.getReason());
-        
-        LeaveRequest saved = leaveRequestRepository.save(leaveRequest);
-        return mapToDto(saved);
+
+        LeaveRequest request = LeaveRequest.builder()
+                .employee(employee)
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .type(dto.getType())
+                .status("PENDING")
+                .reason(dto.getReason())
+                .build();
+
+        LeaveRequest savedRequest = leaveRequestRepository.save(request);
+        return convertToDto(savedRequest);
     }
-    
+
     @Override
+    @Transactional
     public LeaveRequestDto approve(Long id) {
-        LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with id: " + id));
-        
-        leaveRequest.setStatus("APPROVED");
-        LeaveRequest updated = leaveRequestRepository.save(leaveRequest);
-        return mapToDto(updated);
+        LeaveRequest request = leaveRequestRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with id: " + id));
+
+        request.setStatus("APPROVED");
+        return convertToDto(leaveRequestRepository.save(request));
     }
-    
+
     @Override
+    @Transactional
     public LeaveRequestDto reject(Long id) {
-        LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with id: " + id));
-        
-        leaveRequest.setStatus("REJECTED");
-        LeaveRequest updated = leaveRequestRepository.save(leaveRequest);
-        return mapToDto(updated);
+        LeaveRequest request = leaveRequestRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Leave request not found with id: " + id));
+
+        request.setStatus("REJECTED");
+        return convertToDto(leaveRequestRepository.save(request));
     }
-    
+
     @Override
-    @Transactional(readOnly = true)
     public List<LeaveRequestDto> getByEmployee(Long employeeId) {
         EmployeeProfile employee = employeeProfileRepository.findById(employeeId)
-            .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employeeId));
-        
-        List<LeaveRequest> leaves = leaveRequestRepository.findByEmployee(employee);
-        return leaves.stream()
-            .map(this::mapToDto)
-            .collect(Collectors.toList());
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employeeId));
+
+        return leaveRequestRepository.findByEmployee(employee).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
-    
+
     @Override
-    @Transactional(readOnly = true)
     public List<LeaveRequestDto> getOverlappingForTeam(String teamName, LocalDate start, LocalDate end) {
-        if (start.isAfter(end)) {
-            throw new BadRequestException("Start date must be on or before end date");
-        }
-        
-        List<LeaveRequest> leaves = leaveRequestRepository.findApprovedOverlappingForTeam(teamName, start, end);
-        return leaves.stream()
-            .map(this::mapToDto)
-            .collect(Collectors.toList());
+        return leaveRequestRepository.findApprovedOverlappingForTeam(teamName, start, end).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
-    
-    private LeaveRequestDto mapToDto(LeaveRequest leaveRequest) {
-        return new LeaveRequestDto(
-            leaveRequest.getId(),
-            leaveRequest.getEmployee().getId(),
-            leaveRequest.getStartDate(),
-            leaveRequest.getEndDate(),
-            leaveRequest.getType(),
-            leaveRequest.getStatus(),
-            leaveRequest.getReason()
-        );
+
+    private LeaveRequestDto convertToDto(LeaveRequest request) {
+        return LeaveRequestDto.builder()
+                .id(request.getId())
+                .employeeId(request.getEmployee().getEmployeeId())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .type(request.getType())
+                .status(request.getStatus())
+                .reason(request.getReason())
+                .build();
     }
 }
