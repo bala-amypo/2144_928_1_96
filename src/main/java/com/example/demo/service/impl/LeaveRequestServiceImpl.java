@@ -10,24 +10,21 @@ import java.util.List;
 @Service
 public class LeaveRequestServiceImpl implements LeaveRequestService {
 
-    private final LeaveRequestRepository leaveRequestRepository;
+    private final LeaveRequestRepository repo;
 
-    public LeaveRequestServiceImpl(LeaveRequestRepository leaveRequestRepository) {
-        this.leaveRequestRepository = leaveRequestRepository;
+    public LeaveRequestServiceImpl(LeaveRequestRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
     public LeaveRequest applyLeave(LeaveRequest leaveRequest) {
-        return leaveRequestRepository.save(leaveRequest);
+        return repo.save(leaveRequest);
     }
 
-    @Override
     public LeaveRequest getLeaveById(Long id) {
-        return leaveRequestRepository.findById(id).orElse(null);
+        return repo.findById(id).orElse(null);
     }
 
-    @Override
     public List<LeaveRequest> getAllLeaves() {
-        return leaveRequestRepository.findAll();
+        return repo.findAll();
     }
 }

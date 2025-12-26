@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
-public interface CapacityAnalysisService {
+import com.example.demo.model.TeamCapacity;
+import java.time.LocalDate;
+import java.util.List;
 
-    boolean isTeamOverCapacity(Long teamId);
+public interface CapacityAnalysisService {
+    List<TeamCapacity> analyze(LocalDate start, LocalDate end);
 }
