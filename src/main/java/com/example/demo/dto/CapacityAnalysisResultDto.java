@@ -1,17 +1,26 @@
 package com.example.demo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.Map;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class CapacityAnalysisResultDto {
     private boolean risky;
     private Map<LocalDate, Double> capacityByDate;
+
+    // Getters and Setters
+    public boolean isRisky() {
+        return risky;
+    }
+
+    public void setRisky(boolean risky) {
+        this.risky = risky;
+    }
+
+    public Map<LocalDate, Double> getCapacityByDate() {
+        return capacityByDate;
+    }
+
+    public void setCapacityByDate(Map<LocalDate, Double> capacityByDate) {
+        this.capacityByDate = capacityByDate;
+    }
 }
