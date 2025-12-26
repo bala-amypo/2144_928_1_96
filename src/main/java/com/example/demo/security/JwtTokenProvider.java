@@ -41,7 +41,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // THIS FIXES: method getEmail(java.lang.String) cannot find symbol
     public String getEmail(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -52,7 +51,6 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    // THIS FIXES: method getRole(java.lang.String) cannot find symbol
     public String getRole(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -61,6 +59,18 @@ public class JwtTokenProvider {
                 .getBody();
 
         return claims.get("role", String.class);
+    }
+    
+    // FIX 2: ADD THIS MISSING METHOD to resolve 'cannot find symbol: method getUserId'
+    public Long getUserId(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        // Retrieve the 'userId' claim and ensure it is returned as a Long
+        return claims.get("userId", Long.class); 
     }
 
     public boolean validateToken(String authToken) {

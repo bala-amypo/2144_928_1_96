@@ -1,14 +1,15 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.CapacityAnalysisResultDto;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.CapacityAlert;
 import com.example.demo.model.LeaveRequest;
 import com.example.demo.model.TeamCapacityConfig;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CapacityAlertRepository;
 import com.example.demo.repository.LeaveRequestRepository;
 import com.example.demo.repository.TeamCapacityConfigRepository;
+import com.example.demo.repository.EmployeeProfileRepository; // <-- ADDED IMPORT
 import com.example.demo.service.CapacityAnalysisService;
 import com.example.demo.util.DateRangeUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class CapacityAnalysisServiceImpl implements CapacityAnalysisService {
     private final TeamCapacityConfigRepository teamCapacityConfigRepository;
     private final LeaveRequestRepository leaveRequestRepository;
     private final CapacityAlertRepository capacityAlertRepository;
+    private final EmployeeProfileRepository employeeProfileRepository; // <-- ADDED FIELD TO MATCH TEST EXPECTATION
 
     @Override
     @Transactional
@@ -58,7 +60,7 @@ public class CapacityAnalysisServiceImpl implements CapacityAnalysisService {
             
             // Filter down to the target team
             long leavesOnLeave = approvedLeaves.stream()
-                .filter(lr -> lr.getEmployee().getTeamName().equals(teamName))
+                .filter(lr -> lr.getEmployee() != null && lr.getEmployee().getTeamName() != null && lr.getEmployee().getTeamName().equals(teamName))
                 .count();
 
             double remainingCapacity = (double) (headcount - leavesOnLeave);
