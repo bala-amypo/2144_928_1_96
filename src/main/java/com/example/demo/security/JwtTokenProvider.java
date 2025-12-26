@@ -1,6 +1,6 @@
 package com.example.demo.security;
 
-import com.example.demo.entity.UserAccount;
+import com.example.demo.model.UserAccount;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;

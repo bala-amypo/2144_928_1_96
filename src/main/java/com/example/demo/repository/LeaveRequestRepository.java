@@ -1,7 +1,7 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.EmployeeProfile;
-import com.example.demo.entity.LeaveRequest;
+import com.example.demo.model.EmployeeProfile;
+import com.example.demo.model.LeaveRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
