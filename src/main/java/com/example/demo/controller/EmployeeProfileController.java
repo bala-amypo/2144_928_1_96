@@ -56,11 +56,10 @@ public class EmployeeProfileController {
         List<EmployeeProfileDto> employees = employeeProfileService.getAll();
         return ResponseEntity.ok(employees);
     }
-    
     @DeleteMapping("/{id}/deactivate")
-    @Operation(summary = "Deactivate an employee")
-    public ResponseEntity<Void> deactivateEmployee(@PathVariable Long id) {
-        employeeProfileService.deactivate(id);
-        return ResponseEntity.noContent().build();
-    }
+@Operation(summary = "Deactivate an employee")
+public ResponseEntity<Void> deactivateEmployee(@PathVariable Long id) {
+    employeeProfileService.deactivate(id);
+    return ResponseEntity.noContent().build();
+}
 }
