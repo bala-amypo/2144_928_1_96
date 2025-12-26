@@ -5,42 +5,70 @@ import com.example.demo.dto.AuthResponse;
 import com.example.demo.model.UserAccount;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.repository.UserAccountRepository;
-import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.example.demo.security.JwtTokenProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    
+
     private final UserAccountRepository userAccountRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
-    
-    public AuthServiceImpl(UserAccountRepository userAccountRepository,
-                          BCryptPasswordEncoder passwordEncoder,
-                          JwtTokenProvider jwtTokenProvider) {
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider tokenProvider;
+
+    // Specific Constructor Requirement: Must take these three arguments in order.
+    public AuthServiceImpl(UserAccountRepository userAccountRepository, 
+                           PasswordEncoder passwordEncoder, 
+                           JwtTokenProvider tokenProvider) {
         this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.tokenProvider = tokenProvider;
+    }
+
+    @Override
+    @Transactional
+    public AuthResponse authenticate(AuthRequest request) {
+        UserAccount user = userAccountRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadRequestException("Invalid email or password."));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BadRequestException("Invalid email or password.");
+        }
+
+        String token = tokenProvider.generateToken(user);
+        
+        return AuthResponse.builder()
+                .token(token)
+                .userId(user.getId())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
     }
     
     @Override
-    public AuthResponse authenticate(AuthRequest request) {
-        UserAccount user = userAccountRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new BadRequestException("Invalid email or password"));
-        
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadRequestException("Invalid email or password");
+    @Transactional
+    public AuthResponse register(AuthRequest request) {
+        if (userAccountRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new BadRequestException("Email already exists.");
         }
         
-        String token = jwtTokenProvider.generateToken(user);
+        UserAccount newUser = UserAccount.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role("USER") 
+                .build();
+                
+        UserAccount savedUser = userAccountRepository.save(newUser);
         
-        return new AuthResponse(
-            token,
-            user.getId(),
-            user.getEmail(),
-            user.getRole()
-        );
+        String token = tokenProvider.generateToken(savedUser);
+        
+        return AuthResponse.builder()
+                .token(token)
+                .userId(savedUser.getId())
+                .email(savedUser.getEmail())
+                .role(savedUser.getRole())
+                .build();
     }
 }
