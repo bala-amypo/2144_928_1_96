@@ -2,7 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
-import com.example.demo.entity.UserAccount;
+import com.example.demo.model.UserAccount;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtTokenProvider;

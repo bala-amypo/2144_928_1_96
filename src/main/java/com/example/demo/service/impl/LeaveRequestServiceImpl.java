@@ -1,8 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.LeaveRequestDto;
-import com.example.demo.entity.EmployeeProfile;
-import com.example.demo.entity.LeaveRequest;
+import com.example.demo.model.EmployeeProfile;
+import com.example.demo.model.LeaveRequest;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.EmployeeProfileRepository;

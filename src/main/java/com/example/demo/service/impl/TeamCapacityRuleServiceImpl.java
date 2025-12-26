@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.TeamCapacityConfig;
+import com.example.demo.model.TeamCapacityConfig;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.TeamCapacityConfigRepository;

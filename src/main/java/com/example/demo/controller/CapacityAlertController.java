@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CapacityAnalysisResultDto;
-import com.example.demo.entity.CapacityAlert;
+import com.example.demo.model.CapacityAlert;
 import com.example.demo.repository.CapacityAlertRepository;
 import com.example.demo.service.CapacityAnalysisService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.TeamCapacityConfig;
+import com.example.demo.model.TeamCapacityConfig;
 
 public interface TeamCapacityRuleService {
     
