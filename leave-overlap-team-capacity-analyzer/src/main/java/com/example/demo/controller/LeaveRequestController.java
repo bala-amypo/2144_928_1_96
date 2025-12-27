@@ -1,32 +1,45 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.LeaveRequest;
+import com.example.demo.dto.LeaveRequestDto;
 import com.example.demo.service.LeaveRequestService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/leaves")
+@RequestMapping("/api/leaves")
 public class LeaveRequestController {
-
-    private final LeaveRequestService service;
-
-    public LeaveRequestController(LeaveRequestService service) {
-        this.service = service;
-    }
+    
+    @Autowired
+    private LeaveRequestService leaveService;
 
     @PostMapping
-    public LeaveRequest applyLeave(@RequestBody LeaveRequest leaveRequest) {
-        return service.applyLeave(leaveRequest);
+    public ResponseEntity<LeaveRequestDto> createLeave(@RequestBody LeaveRequestDto dto) {
+        return ResponseEntity.ok(leaveService.create(dto));
     }
 
-    @GetMapping("/{id}")
-    public LeaveRequest getLeaveById(@PathVariable Long id) {
-        return service.getLeaveById(id);
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<LeaveRequestDto> approveLeave(@PathVariable Long id) {
+        return ResponseEntity.ok(leaveService.approve(id));
     }
 
-    @GetMapping
-    public List<LeaveRequest> getAllLeaves() {
-        return service.getAllLeaves();
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<LeaveRequestDto> rejectLeave(@PathVariable Long id) {
+        return ResponseEntity.ok(leaveService.reject(id));
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<LeaveRequestDto>> getLeavesByEmployee(@PathVariable Long employeeId) {
+        return ResponseEntity.ok(leaveService.getByEmployee(employeeId));
+    }
+
+    @GetMapping("/team-overlap")
+    public ResponseEntity<List<LeaveRequestDto>> getOverlappingLeaves(
+            @RequestParam String teamName,
+            @RequestParam LocalDate start,
+            @RequestParam LocalDate end) {
+        return ResponseEntity.ok(leaveService.getOverlappingForTeam(teamName, start, end));
     }
 }
