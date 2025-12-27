@@ -1,15 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.model.TeamCapacity;
-import java.util.List;
+import com.example.demo.model.TeamCapacityConfig;
 
-public interface TeamCapacityService {
-
-    TeamCapacity create(TeamCapacity teamCapacity);
-
-    TeamCapacity update(Long id, TeamCapacity teamCapacity);
-
-    TeamCapacity getById(Long id);
-
-    List<TeamCapacity> getAll();
+public interface TeamCapacityRuleService {
+    TeamCapacityConfig createRule(TeamCapacityConfig rule);
+    TeamCapacityConfig updateRule(Long id, TeamCapacityConfig updatedRule);
+    TeamCapacityConfig getRuleByTeam(String teamName);
 }
